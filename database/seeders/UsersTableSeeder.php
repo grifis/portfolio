@@ -6,6 +6,7 @@ use Illuminate\Database\Seeder;
 
 class UsersTableSeeder extends Seeder
 {
+    use HasFactory;
     /**
      * Run the database seeds.
      *
