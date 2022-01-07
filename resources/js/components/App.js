@@ -1,4 +1,5 @@
 import React from 'react';
+import ReactDOM from 'react-dom';
 import TimeLine from './TimeLine';
 import MyPage from './MyPage';
 import NavBar from "./NavBar";
@@ -22,9 +23,6 @@ function App() {
         <Router>
             <div>
                 <Routes>
-                    <Route path="/" element={<Home />} />
-                    <Route path="/login" element={<Login />} />
-                    <Route path="/register" element={<Register />} />
                     <Route path="mypage" element={<MyPage />} >
                         <Route path="profile" element={<Profile />} />
                         <Route path="message" element={<Message />} />
@@ -38,5 +36,6 @@ function App() {
         </Router>
     )
 }
-
-export default App;
+if (document.getElementById('apple')) {
+    ReactDOM.render(<App />, document.getElementById('apple'));
+}
