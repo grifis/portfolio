@@ -21,3 +21,12 @@ Route::get('/user', function (Request $request) {
     $users = App\Models\User::all();
     return response()->json(['users' => $users]);
 });
+
+Route::get('/movie', function(Request $request) {
+    $movie = App\Models\Post::all();
+    return response()->json(['movie' => $movie]);
+});
+
+Route::post('/api/logout', 'Auth\RegisterController@showRegistrationForm')->name('register');
+
+

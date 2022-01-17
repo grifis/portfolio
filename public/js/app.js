@@ -5325,9 +5325,24 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _mypage_MyPosts__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./mypage/MyPosts */ "./resources/js/components/mypage/MyPosts.js");
 /* harmony import */ var _Login__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./Login */ "./resources/js/components/Login.js");
 /* harmony import */ var _Register__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./Register */ "./resources/js/components/Register.js");
-/* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/index.js");
-/* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router/index.js");
-/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! react/jsx-runtime */ "./node_modules/react/jsx-runtime.js");
+/* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/index.js");
+/* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router/index.js");
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_13___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_13__);
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! react/jsx-runtime */ "./node_modules/react/jsx-runtime.js");
+function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
+
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
+function _iterableToArrayLimit(arr, i) { var _i = arr == null ? null : typeof Symbol !== "undefined" && arr[Symbol.iterator] || arr["@@iterator"]; if (_i == null) return; var _arr = []; var _n = true; var _d = false; var _s, _e; try { for (_i = _i.call(arr); !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
+
+function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+
+
 
 
 
@@ -5346,31 +5361,58 @@ __webpack_require__.r(__webpack_exports__);
 
 
 function App() {
-  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)(react_router_dom__WEBPACK_IMPORTED_MODULE_14__.BrowserRouter, {
-    children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)("div", {
-      children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsxs)(react_router_dom__WEBPACK_IMPORTED_MODULE_15__.Routes, {
-        children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsxs)(react_router_dom__WEBPACK_IMPORTED_MODULE_15__.Route, {
+  var csrftoken = document.head.querySelector('meta[name="csrf-token"]').content;
+
+  var _useState = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)({
+    csrftoken: csrftoken
+  }),
+      _useState2 = _slicedToArray(_useState, 2),
+      csrf_token = _useState2[0],
+      setCsrf_token = _useState2[1];
+
+  var logout = function logout() {
+    axios__WEBPACK_IMPORTED_MODULE_13___default().post('logout').then(function (response) {
+      console.log('ok');
+    });
+  };
+
+  var post = function post() {
+    axios__WEBPACK_IMPORTED_MODULE_13___default().post('/create/posts').then(function (response) {
+      console.log('ok');
+    });
+  };
+
+  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_14__.jsx)(react_router_dom__WEBPACK_IMPORTED_MODULE_15__.BrowserRouter, {
+    children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_14__.jsx)("div", {
+      children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_14__.jsxs)(react_router_dom__WEBPACK_IMPORTED_MODULE_16__.Routes, {
+        children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_14__.jsxs)(react_router_dom__WEBPACK_IMPORTED_MODULE_16__.Route, {
           path: "mypage",
-          element: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)(_MyPage__WEBPACK_IMPORTED_MODULE_3__["default"], {}),
-          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)(react_router_dom__WEBPACK_IMPORTED_MODULE_15__.Route, {
+          element: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_14__.jsx)(_MyPage__WEBPACK_IMPORTED_MODULE_3__["default"], {
+            logout: logout,
+            csrf_token: csrf_token
+          }),
+          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_14__.jsx)(react_router_dom__WEBPACK_IMPORTED_MODULE_16__.Route, {
             path: "profile",
-            element: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)(_mypage_Profile__WEBPACK_IMPORTED_MODULE_7__["default"], {})
-          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)(react_router_dom__WEBPACK_IMPORTED_MODULE_15__.Route, {
+            element: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_14__.jsx)(_mypage_Profile__WEBPACK_IMPORTED_MODULE_7__["default"], {})
+          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_14__.jsx)(react_router_dom__WEBPACK_IMPORTED_MODULE_16__.Route, {
             path: "message",
-            element: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)(_mypage_Message__WEBPACK_IMPORTED_MODULE_8__["default"], {})
-          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)(react_router_dom__WEBPACK_IMPORTED_MODULE_15__.Route, {
+            element: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_14__.jsx)(_mypage_Message__WEBPACK_IMPORTED_MODULE_8__["default"], {})
+          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_14__.jsx)(react_router_dom__WEBPACK_IMPORTED_MODULE_16__.Route, {
             path: "likes",
-            element: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)(_mypage_Likes__WEBPACK_IMPORTED_MODULE_9__["default"], {})
-          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)(react_router_dom__WEBPACK_IMPORTED_MODULE_15__.Route, {
+            element: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_14__.jsx)(_mypage_Likes__WEBPACK_IMPORTED_MODULE_9__["default"], {})
+          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_14__.jsx)(react_router_dom__WEBPACK_IMPORTED_MODULE_16__.Route, {
             path: "myposts",
-            element: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)(_mypage_MyPosts__WEBPACK_IMPORTED_MODULE_10__["default"], {})
+            element: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_14__.jsx)(_mypage_MyPosts__WEBPACK_IMPORTED_MODULE_10__["default"], {})
           })]
-        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)(react_router_dom__WEBPACK_IMPORTED_MODULE_15__.Route, {
+        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_14__.jsx)(react_router_dom__WEBPACK_IMPORTED_MODULE_16__.Route, {
           path: "/timeline",
-          element: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)(_TimeLine__WEBPACK_IMPORTED_MODULE_2__["default"], {})
-        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)(react_router_dom__WEBPACK_IMPORTED_MODULE_15__.Route, {
+          element: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_14__.jsx)(_TimeLine__WEBPACK_IMPORTED_MODULE_2__["default"], {})
+        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_14__.jsx)(react_router_dom__WEBPACK_IMPORTED_MODULE_16__.Route, {
           path: "/practice",
-          element: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)(_Practice__WEBPACK_IMPORTED_MODULE_5__["default"], {})
+          element: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_14__.jsx)(_Practice__WEBPACK_IMPORTED_MODULE_5__["default"], {
+            csrf_token: csrf_token,
+            post: post
+          })
         })]
       })
     })
@@ -5378,7 +5420,7 @@ function App() {
 }
 
 if (document.getElementById('apple')) {
-  react_dom__WEBPACK_IMPORTED_MODULE_1__.render( /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx)(App, {}), document.getElementById('apple'));
+  react_dom__WEBPACK_IMPORTED_MODULE_1__.render( /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_14__.jsx)(App, {}), document.getElementById('apple'));
 }
 
 /***/ }),
@@ -5525,20 +5567,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
-/* harmony import */ var _mypage_MyPageNav__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./mypage/MyPageNav */ "./resources/js/components/mypage/MyPageNav.js");
-/* harmony import */ var _NavBar__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./NavBar */ "./resources/js/components/NavBar.js");
-/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! react/jsx-runtime */ "./node_modules/react/jsx-runtime.js");
-function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
-
-function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
-
-function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
-
-function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
-
-function _iterableToArrayLimit(arr, i) { var _i = arr == null ? null : typeof Symbol !== "undefined" && arr[Symbol.iterator] || arr["@@iterator"]; if (_i == null) return; var _arr = []; var _n = true; var _d = false; var _s, _e; try { for (_i = _i.call(arr); !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
-
-function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _mypage_MyPageNav__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./mypage/MyPageNav */ "./resources/js/components/mypage/MyPageNav.js");
+/* harmony import */ var _NavBar__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./NavBar */ "./resources/js/components/NavBar.js");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! react/jsx-runtime */ "./node_modules/react/jsx-runtime.js");
 
 
 
@@ -5547,32 +5580,16 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 
 
-function MyPage() {
-  var csrftoken = document.head.querySelector('meta[name="csrf-token"]').content;
-
-  var _useState = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)({
-    csrf_token: csrf_token
-  }),
-      _useState2 = _slicedToArray(_useState, 2),
-      csrf_token = _useState2[0],
-      setCsrf_token = _useState2[1];
-
-  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxs)("div", {
-    children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxs)("form", {
-      action: "/logout",
-      method: "post",
-      children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("input", {
-        type: "hidden",
-        value: csrf_token
-      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("button", {
-        type: "submit",
-        children: "\u30ED\u30B0\u30A2\u30A6\u30C8"
-      })]
-    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxs)("div", {
-      children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_NavBar__WEBPACK_IMPORTED_MODULE_2__["default"], {}), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("h1", {
+function MyPage(props) {
+  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("div", {
+    children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxs)("div", {
+      children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)(_NavBar__WEBPACK_IMPORTED_MODULE_3__["default"], {
+        logout: props.logout,
+        csrf_token: props.csrf_token
+      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("h1", {
         children: "\u30DE\u30A4\u30DA\u30FC\u30B8"
-      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_mypage_MyPageNav__WEBPACK_IMPORTED_MODULE_1__["default"], {})]
-    })]
+      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)(_mypage_MyPageNav__WEBPACK_IMPORTED_MODULE_2__["default"], {})]
+    })
   });
 }
 
@@ -5600,10 +5617,19 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-function NavBar() {
+function NavBar(props) {
   return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxs)("div", {
     className: "nav",
-    children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)(react_router_dom__WEBPACK_IMPORTED_MODULE_2__.Link, {
+    children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxs)("form", {
+      children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("input", {
+        type: "hidden",
+        value: props.csrf_token
+      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("input", {
+        type: "submit",
+        onClick: props.logout,
+        value: "\u30ED\u30B0\u30A2\u30A6\u30C8"
+      })]
+    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)(react_router_dom__WEBPACK_IMPORTED_MODULE_2__.Link, {
       to: "/mypage",
       children: "\u30DE\u30A4\u30DA\u30FC\u30B8"
     }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)(react_router_dom__WEBPACK_IMPORTED_MODULE_2__.Link, {
@@ -5632,22 +5658,118 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
-/* harmony import */ var _NavBar__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./NavBar */ "./resources/js/components/NavBar.js");
-/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react/jsx-runtime */ "./node_modules/react/jsx-runtime.js");
+/* harmony import */ var react_webcam__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-webcam */ "./node_modules/react-webcam/dist/react-webcam.js");
+/* harmony import */ var react_webcam__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_webcam__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _NavBar__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./NavBar */ "./resources/js/components/NavBar.js");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! react/jsx-runtime */ "./node_modules/react/jsx-runtime.js");
+function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
+
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
+function _iterableToArrayLimit(arr, i) { var _i = arr == null ? null : typeof Symbol !== "undefined" && arr[Symbol.iterator] || arr["@@iterator"]; if (_i == null) return; var _arr = []; var _n = true; var _d = false; var _s, _e; try { for (_i = _i.call(arr); !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
+
+function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 
 
 
 
-function Practice() {
-  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxs)("div", {
-    children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)(_NavBar__WEBPACK_IMPORTED_MODULE_1__["default"], {}), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("h1", {
+
+
+var WebcamComponent = function WebcamComponent() {
+  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)((react_webcam__WEBPACK_IMPORTED_MODULE_1___default()), {});
+};
+
+function Practice(props) {
+  var webcamRef = react__WEBPACK_IMPORTED_MODULE_0__.useRef(null);
+  var mediaRecorderRef = react__WEBPACK_IMPORTED_MODULE_0__.useRef(null);
+
+  var _React$useState = react__WEBPACK_IMPORTED_MODULE_0__.useState(false),
+      _React$useState2 = _slicedToArray(_React$useState, 2),
+      capturing = _React$useState2[0],
+      setCapturing = _React$useState2[1];
+
+  var _React$useState3 = react__WEBPACK_IMPORTED_MODULE_0__.useState([]),
+      _React$useState4 = _slicedToArray(_React$useState3, 2),
+      recordedChunks = _React$useState4[0],
+      setRecordedChunks = _React$useState4[1];
+
+  var handleStartCaptureClick = react__WEBPACK_IMPORTED_MODULE_0__.useCallback(function () {
+    setCapturing(true);
+    var userAgent = window.navigator.userAgent;
+    var mimeCode = "video/mp4";
+
+    if (userAgent.indexOf('Chrome') != -1) {
+      mimeCode = "video/webm";
+    }
+
+    mediaRecorderRef.current = new MediaRecorder(webcamRef.current.stream, {
+      mimeType: mimeCode
+    });
+    mediaRecorderRef.current.addEventListener("dataavailable", handleDataAvailable);
+    mediaRecorderRef.current.start();
+  }, [webcamRef, setCapturing, mediaRecorderRef]);
+  var handleDataAvailable = react__WEBPACK_IMPORTED_MODULE_0__.useCallback(function (_ref) {
+    var data = _ref.data;
+
+    if (data.size > 0) {
+      setRecordedChunks(function (prev) {
+        return prev.concat(data);
+      });
+    }
+  }, [setRecordedChunks]);
+  var handleStopCaptureClick = react__WEBPACK_IMPORTED_MODULE_0__.useCallback(function () {
+    mediaRecorderRef.current.stop();
+    setCapturing(false);
+  }, [mediaRecorderRef, webcamRef, setCapturing]);
+  var handleDownload = react__WEBPACK_IMPORTED_MODULE_0__.useCallback(function () {
+    //recordedChunksが変化した時に再計算
+    if (recordedChunks.length) {
+      var blob = new Blob(recordedChunks, {
+        //Blobはバイナリを扱う
+        type: "video/webm"
+      });
+      var url = URL.createObjectURL(blob); //メモリに保存されたblobにアクセス可能なURLを生成
+
+      var a = document.createElement("a"); //HTML要素を生成
+
+      document.body.appendChild(a); //生成したaタグの要素を実際のHTML要素へ追加
+
+      a.style = "display: none";
+      a.href = url;
+      a.download = "react-webcam-stream-capture.webm"; //ダウンロード時の名前を指定
+
+      a.click();
+      window.URL.revokeObjectURL(url); //メモリの解放
+
+      setRecordedChunks([]);
+    }
+  }, [recordedChunks]);
+  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxs)("div", {
+    children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_NavBar__WEBPACK_IMPORTED_MODULE_2__["default"], {}), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("h1", {
       children: "\u9762\u63A5\u7DF4\u7FD2"
+    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)((react_webcam__WEBPACK_IMPORTED_MODULE_1___default()), {
+      audio: true,
+      muted: true,
+      ref: webcamRef,
+      width: "60%"
+    }), capturing ? /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("button", {
+      onClick: handleStopCaptureClick,
+      children: "Stop Capture"
+    }) : /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("button", {
+      onClick: handleStartCaptureClick,
+      children: "Start Capture"
+    }), recordedChunks.length > 0 && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("button", {
+      onClick: handleDownload,
+      children: "Download"
     })]
   });
 }
 
-;
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Practice);
 
 /***/ }),
@@ -5742,8 +5864,14 @@ function TimeLine() {
       users = _useState2[0],
       setUsers = _useState2[1];
 
+  var _useState3 = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)([]),
+      _useState4 = _slicedToArray(_useState3, 2),
+      movies = _useState4[0],
+      setMovies = _useState4[1];
+
   (0,react__WEBPACK_IMPORTED_MODULE_1__.useEffect)(function () {
     getUsers();
+    getMovies();
   }, []);
 
   var getUsers = /*#__PURE__*/function () {
@@ -5773,9 +5901,50 @@ function TimeLine() {
     };
   }();
 
+  var getMovies = /*#__PURE__*/function () {
+    var _ref2 = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee2() {
+      var response;
+      return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee2$(_context2) {
+        while (1) {
+          switch (_context2.prev = _context2.next) {
+            case 0:
+              _context2.next = 2;
+              return axios__WEBPACK_IMPORTED_MODULE_2___default().get('/api/movie');
+
+            case 2:
+              response = _context2.sent;
+              setMovies(response.data.movie);
+
+            case 4:
+            case "end":
+              return _context2.stop();
+          }
+        }
+      }, _callee2);
+    }));
+
+    return function getMovies() {
+      return _ref2.apply(this, arguments);
+    };
+  }();
+
   return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxs)("div", {
     children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)(_NavBar__WEBPACK_IMPORTED_MODULE_3__["default"], {}), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("h1", {
       children: "\u30BF\u30A4\u30E0\u30E9\u30A4\u30F3"
+    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("div", {
+      children: movies.map(function (movie) {
+        return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxs)("div", {
+          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("p", {
+            children: "\u8CEA\u554F\u6587:\u5B66\u751F\u6642\u4EE3\u306B\u529B\u3092\u5165\u308C\u305F\u3053\u3068\u306F\u4F55\u3067\u3059\u304B\uFF1F"
+          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("video", {
+            src: "".concat(movie.image_path),
+            controls: true,
+            width: "40%"
+          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("p", {
+            children: "\u30E6\u30FC\u30B6\u30FC\u540D"
+          })]
+        });
+      })
     }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("ul", {
       children: users.map(function (user) {
         return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("li", {
@@ -56270,6 +56439,443 @@ const normalizeHash = hash => !hash || hash === "#" ? "" : hash.startsWith("#") 
 
 //# sourceMappingURL=index.js.map
 
+
+/***/ }),
+
+/***/ "./node_modules/react-webcam/dist/react-webcam.js":
+/*!********************************************************!*\
+  !*** ./node_modules/react-webcam/dist/react-webcam.js ***!
+  \********************************************************/
+/***/ (function(module, __unused_webpack_exports, __webpack_require__) {
+
+(function webpackUniversalModuleDefinition(root, factory) {
+	if(true)
+		module.exports = factory(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+	else {}
+})(this, function(__WEBPACK_EXTERNAL_MODULE_react__) {
+return /******/ (function(modules) { // webpackBootstrap
+/******/ 	// The module cache
+/******/ 	var installedModules = {};
+/******/
+/******/ 	// The require function
+/******/ 	function __nested_webpack_require_620__(moduleId) {
+/******/
+/******/ 		// Check if module is in cache
+/******/ 		if(installedModules[moduleId]) {
+/******/ 			return installedModules[moduleId].exports;
+/******/ 		}
+/******/ 		// Create a new module (and put it into the cache)
+/******/ 		var module = installedModules[moduleId] = {
+/******/ 			i: moduleId,
+/******/ 			l: false,
+/******/ 			exports: {}
+/******/ 		};
+/******/
+/******/ 		// Execute the module function
+/******/ 		modules[moduleId].call(module.exports, module, module.exports, __nested_webpack_require_620__);
+/******/
+/******/ 		// Flag the module as loaded
+/******/ 		module.l = true;
+/******/
+/******/ 		// Return the exports of the module
+/******/ 		return module.exports;
+/******/ 	}
+/******/
+/******/
+/******/ 	// expose the modules object (__webpack_modules__)
+/******/ 	__nested_webpack_require_620__.m = modules;
+/******/
+/******/ 	// expose the module cache
+/******/ 	__nested_webpack_require_620__.c = installedModules;
+/******/
+/******/ 	// define getter function for harmony exports
+/******/ 	__nested_webpack_require_620__.d = function(exports, name, getter) {
+/******/ 		if(!__nested_webpack_require_620__.o(exports, name)) {
+/******/ 			Object.defineProperty(exports, name, { enumerable: true, get: getter });
+/******/ 		}
+/******/ 	};
+/******/
+/******/ 	// define __esModule on exports
+/******/ 	__nested_webpack_require_620__.r = function(exports) {
+/******/ 		if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
+/******/ 			Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
+/******/ 		}
+/******/ 		Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 	};
+/******/
+/******/ 	// create a fake namespace object
+/******/ 	// mode & 1: value is a module id, require it
+/******/ 	// mode & 2: merge all properties of value into the ns
+/******/ 	// mode & 4: return value when already ns object
+/******/ 	// mode & 8|1: behave like require
+/******/ 	__nested_webpack_require_620__.t = function(value, mode) {
+/******/ 		if(mode & 1) value = __nested_webpack_require_620__(value);
+/******/ 		if(mode & 8) return value;
+/******/ 		if((mode & 4) && typeof value === 'object' && value && value.__esModule) return value;
+/******/ 		var ns = Object.create(null);
+/******/ 		__nested_webpack_require_620__.r(ns);
+/******/ 		Object.defineProperty(ns, 'default', { enumerable: true, value: value });
+/******/ 		if(mode & 2 && typeof value != 'string') for(var key in value) __nested_webpack_require_620__.d(ns, key, function(key) { return value[key]; }.bind(null, key));
+/******/ 		return ns;
+/******/ 	};
+/******/
+/******/ 	// getDefaultExport function for compatibility with non-harmony modules
+/******/ 	__nested_webpack_require_620__.n = function(module) {
+/******/ 		var getter = module && module.__esModule ?
+/******/ 			function getDefault() { return module['default']; } :
+/******/ 			function getModuleExports() { return module; };
+/******/ 		__nested_webpack_require_620__.d(getter, 'a', getter);
+/******/ 		return getter;
+/******/ 	};
+/******/
+/******/ 	// Object.prototype.hasOwnProperty.call
+/******/ 	__nested_webpack_require_620__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
+/******/
+/******/ 	// __webpack_public_path__
+/******/ 	__nested_webpack_require_620__.p = "";
+/******/
+/******/
+/******/ 	// Load entry module and return exports
+/******/ 	return __nested_webpack_require_620__(__nested_webpack_require_620__.s = "./src/react-webcam.tsx");
+/******/ })
+/************************************************************************/
+/******/ ({
+
+/***/ "./src/react-webcam.tsx":
+/*!******************************!*\
+  !*** ./src/react-webcam.tsx ***!
+  \******************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __nested_webpack_require_4284__) {
+
+"use strict";
+__nested_webpack_require_4284__.r(__webpack_exports__);
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __nested_webpack_require_4284__(/*! react */ "react");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__nested_webpack_require_4284__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+var __extends = ( false) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+var __assign = ( false) || function () {
+    __assign = Object.assign || function(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+                t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
+};
+var __rest = ( false) || function (s, e) {
+    var t = {};
+    for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0)
+        t[p] = s[p];
+    if (s != null && typeof Object.getOwnPropertySymbols === "function")
+        for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) {
+            if (e.indexOf(p[i]) < 0 && Object.prototype.propertyIsEnumerable.call(s, p[i]))
+                t[p[i]] = s[p[i]];
+        }
+    return t;
+};
+
+// polyfill based on https://developer.mozilla.org/en-US/docs/Web/API/MediaDevices/getUserMedia
+(function polyfillGetUserMedia() {
+    if (typeof window === 'undefined') {
+        return;
+    }
+    // Older browsers might not implement mediaDevices at all, so we set an empty object first
+    if (navigator.mediaDevices === undefined) {
+        navigator.mediaDevices = {};
+    }
+    // Some browsers partially implement mediaDevices. We can't just assign an object
+    // with getUserMedia as it would overwrite existing properties.
+    // Here, we will just add the getUserMedia property if it's missing.
+    if (navigator.mediaDevices.getUserMedia === undefined) {
+        navigator.mediaDevices.getUserMedia = function (constraints) {
+            // First get ahold of the legacy getUserMedia, if present
+            var getUserMedia = navigator.getUserMedia ||
+                navigator.webkitGetUserMedia ||
+                navigator.mozGetUserMedia ||
+                navigator.msGetUserMedia;
+            // Some browsers just don't implement it - return a rejected promise with an error
+            // to keep a consistent interface
+            if (!getUserMedia) {
+                return Promise.reject(new Error("getUserMedia is not implemented in this browser"));
+            }
+            // Otherwise, wrap the call to the old navigator.getUserMedia with a Promise
+            return new Promise(function (resolve, reject) {
+                getUserMedia.call(navigator, constraints, resolve, reject);
+            });
+        };
+    }
+})();
+function hasGetUserMedia() {
+    return !!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia);
+}
+var Webcam = /** @class */ (function (_super) {
+    __extends(Webcam, _super);
+    function Webcam(props) {
+        var _this = _super.call(this, props) || this;
+        _this.canvas = null;
+        _this.ctx = null;
+        _this.unmounted = false;
+        _this.state = {
+            hasUserMedia: false
+        };
+        return _this;
+    }
+    Webcam.prototype.componentDidMount = function () {
+        var _a = this, state = _a.state, props = _a.props;
+        if (!hasGetUserMedia()) {
+            props.onUserMediaError("getUserMedia not supported");
+            return;
+        }
+        if (!state.hasUserMedia) {
+            this.requestUserMedia();
+        }
+    };
+    Webcam.prototype.componentDidUpdate = function (nextProps) {
+        var props = this.props;
+        if (!hasGetUserMedia()) {
+            props.onUserMediaError("getUserMedia not supported");
+            return;
+        }
+        var audioConstraintsChanged = JSON.stringify(nextProps.audioConstraints) !==
+            JSON.stringify(props.audioConstraints);
+        var videoConstraintsChanged = JSON.stringify(nextProps.videoConstraints) !==
+            JSON.stringify(props.videoConstraints);
+        var minScreenshotWidthChanged = nextProps.minScreenshotWidth !== props.minScreenshotWidth;
+        var minScreenshotHeightChanged = nextProps.minScreenshotHeight !== props.minScreenshotHeight;
+        if (videoConstraintsChanged ||
+            minScreenshotWidthChanged ||
+            minScreenshotHeightChanged) {
+            this.canvas = null;
+            this.ctx = null;
+        }
+        if (audioConstraintsChanged || videoConstraintsChanged) {
+            this.stopAndCleanup();
+            this.requestUserMedia();
+        }
+    };
+    Webcam.prototype.componentWillUnmount = function () {
+        this.unmounted = true;
+        this.stopAndCleanup();
+    };
+    Webcam.stopMediaStream = function (stream) {
+        if (stream) {
+            if (stream.getVideoTracks && stream.getAudioTracks) {
+                stream.getVideoTracks().map(function (track) {
+                    stream.removeTrack(track);
+                    track.stop();
+                });
+                stream.getAudioTracks().map(function (track) {
+                    stream.removeTrack(track);
+                    track.stop();
+                });
+            }
+            else {
+                stream.stop();
+            }
+        }
+    };
+    Webcam.prototype.stopAndCleanup = function () {
+        var state = this.state;
+        if (state.hasUserMedia) {
+            Webcam.stopMediaStream(this.stream);
+            if (state.src) {
+                window.URL.revokeObjectURL(state.src);
+            }
+        }
+    };
+    Webcam.prototype.getScreenshot = function (screenshotDimensions) {
+        var _a = this, state = _a.state, props = _a.props;
+        if (!state.hasUserMedia)
+            return null;
+        var canvas = this.getCanvas(screenshotDimensions);
+        return (canvas &&
+            canvas.toDataURL(props.screenshotFormat, props.screenshotQuality));
+    };
+    Webcam.prototype.getCanvas = function (screenshotDimensions) {
+        var _a = this, state = _a.state, props = _a.props;
+        if (!this.video) {
+            return null;
+        }
+        if (!state.hasUserMedia || !this.video.videoHeight)
+            return null;
+        if (!this.ctx) {
+            var canvasWidth = this.video.videoWidth;
+            var canvasHeight = this.video.videoHeight;
+            if (!this.props.forceScreenshotSourceSize) {
+                var aspectRatio = canvasWidth / canvasHeight;
+                canvasWidth = props.minScreenshotWidth || this.video.clientWidth;
+                canvasHeight = canvasWidth / aspectRatio;
+                if (props.minScreenshotHeight &&
+                    canvasHeight < props.minScreenshotHeight) {
+                    canvasHeight = props.minScreenshotHeight;
+                    canvasWidth = canvasHeight * aspectRatio;
+                }
+            }
+            this.canvas = document.createElement("canvas");
+            this.canvas.width = (screenshotDimensions === null || screenshotDimensions === void 0 ? void 0 : screenshotDimensions.width) || canvasWidth;
+            this.canvas.height = (screenshotDimensions === null || screenshotDimensions === void 0 ? void 0 : screenshotDimensions.height) || canvasHeight;
+            this.ctx = this.canvas.getContext("2d");
+        }
+        var _b = this, ctx = _b.ctx, canvas = _b.canvas;
+        if (ctx && canvas) {
+            // mirror the screenshot
+            if (props.mirrored) {
+                ctx.translate(canvas.width, 0);
+                ctx.scale(-1, 1);
+            }
+            ctx.imageSmoothingEnabled = props.imageSmoothing;
+            ctx.drawImage(this.video, 0, 0, (screenshotDimensions === null || screenshotDimensions === void 0 ? void 0 : screenshotDimensions.width) || canvas.width, (screenshotDimensions === null || screenshotDimensions === void 0 ? void 0 : screenshotDimensions.height) || canvas.height);
+            // invert mirroring
+            if (props.mirrored) {
+                ctx.scale(-1, 1);
+                ctx.translate(-canvas.width, 0);
+            }
+        }
+        return canvas;
+    };
+    Webcam.prototype.requestUserMedia = function () {
+        var _this = this;
+        var props = this.props;
+        var sourceSelected = function (audioConstraints, videoConstraints) {
+            var constraints = {
+                video: typeof videoConstraints !== "undefined" ? videoConstraints : true
+            };
+            if (props.audio) {
+                constraints.audio =
+                    typeof audioConstraints !== "undefined" ? audioConstraints : true;
+            }
+            navigator.mediaDevices
+                .getUserMedia(constraints)
+                .then(function (stream) {
+                if (_this.unmounted) {
+                    Webcam.stopMediaStream(stream);
+                }
+                else {
+                    _this.handleUserMedia(null, stream);
+                }
+            })
+                .catch(function (e) {
+                _this.handleUserMedia(e);
+            });
+        };
+        if ("mediaDevices" in navigator) {
+            sourceSelected(props.audioConstraints, props.videoConstraints);
+        }
+        else {
+            var optionalSource_1 = function (id) { return ({ optional: [{ sourceId: id }] }); };
+            var constraintToSourceId_1 = function (constraint) {
+                var deviceId = constraint.deviceId;
+                if (typeof deviceId === "string") {
+                    return deviceId;
+                }
+                if (Array.isArray(deviceId) && deviceId.length > 0) {
+                    return deviceId[0];
+                }
+                if (typeof deviceId === "object" && deviceId.ideal) {
+                    return deviceId.ideal;
+                }
+                return null;
+            };
+            // @ts-ignore: deprecated api
+            MediaStreamTrack.getSources(function (sources) {
+                var audioSource = null;
+                var videoSource = null;
+                sources.forEach(function (source) {
+                    if (source.kind === "audio") {
+                        audioSource = source.id;
+                    }
+                    else if (source.kind === "video") {
+                        videoSource = source.id;
+                    }
+                });
+                var audioSourceId = constraintToSourceId_1(props.audioConstraints);
+                if (audioSourceId) {
+                    audioSource = audioSourceId;
+                }
+                var videoSourceId = constraintToSourceId_1(props.videoConstraints);
+                if (videoSourceId) {
+                    videoSource = videoSourceId;
+                }
+                sourceSelected(optionalSource_1(audioSource), optionalSource_1(videoSource));
+            });
+        }
+    };
+    Webcam.prototype.handleUserMedia = function (err, stream) {
+        var props = this.props;
+        if (err || !stream) {
+            this.setState({ hasUserMedia: false });
+            props.onUserMediaError(err);
+            return;
+        }
+        this.stream = stream;
+        try {
+            if (this.video) {
+                this.video.srcObject = stream;
+            }
+            this.setState({ hasUserMedia: true });
+        }
+        catch (error) {
+            this.setState({
+                hasUserMedia: true,
+                src: window.URL.createObjectURL(stream)
+            });
+        }
+        props.onUserMedia(stream);
+    };
+    Webcam.prototype.render = function () {
+        var _this = this;
+        var _a = this, state = _a.state, props = _a.props;
+        var audio = props.audio, forceScreenshotSourceSize = props.forceScreenshotSourceSize, onUserMedia = props.onUserMedia, onUserMediaError = props.onUserMediaError, screenshotFormat = props.screenshotFormat, screenshotQuality = props.screenshotQuality, minScreenshotWidth = props.minScreenshotWidth, minScreenshotHeight = props.minScreenshotHeight, audioConstraints = props.audioConstraints, videoConstraints = props.videoConstraints, imageSmoothing = props.imageSmoothing, mirrored = props.mirrored, _b = props.style, style = _b === void 0 ? {} : _b, rest = __rest(props, ["audio", "forceScreenshotSourceSize", "onUserMedia", "onUserMediaError", "screenshotFormat", "screenshotQuality", "minScreenshotWidth", "minScreenshotHeight", "audioConstraints", "videoConstraints", "imageSmoothing", "mirrored", "style"]);
+        var videoStyle = mirrored ? __assign(__assign({}, style), { transform: (style.transform || "") + " scaleX(-1)" }) : style;
+        return (react__WEBPACK_IMPORTED_MODULE_0__["createElement"]("video", __assign({ autoPlay: true, src: state.src, muted: !audio, playsInline: true, ref: function (ref) {
+                _this.video = ref;
+            }, style: videoStyle }, rest)));
+    };
+    Webcam.defaultProps = {
+        audio: false,
+        forceScreenshotSourceSize: false,
+        imageSmoothing: true,
+        mirrored: false,
+        onUserMedia: function () { return undefined; },
+        onUserMediaError: function () { return undefined; },
+        screenshotFormat: "image/webp",
+        screenshotQuality: 0.92,
+    };
+    return Webcam;
+}(react__WEBPACK_IMPORTED_MODULE_0__["Component"]));
+/* harmony default export */ __webpack_exports__["default"] = (Webcam);
+
+
+/***/ }),
+
+/***/ "react":
+/*!**************************************************************************************!*\
+  !*** external {"root":"React","commonjs2":"react","commonjs":"react","amd":"react"} ***!
+  \**************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = __WEBPACK_EXTERNAL_MODULE_react__;
+
+/***/ })
+
+/******/ })["default"];
+});
+//# sourceMappingURL=react-webcam.js.map
 
 /***/ }),
 

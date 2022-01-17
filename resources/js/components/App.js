@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import ReactDOM from 'react-dom';
 import TimeLine from './TimeLine';
 import MyPage from './MyPage';
@@ -16,21 +16,37 @@ import {
     Routes,
     Route
 } from 'react-router-dom';
+import axios from "axios";
 
 
 function App() {
+    const csrftoken = document.head.querySelector('meta[name="csrf-token"]').content;
+    const [csrf_token, setCsrf_token] = useState({csrftoken});
+    const logout = () => {
+        axios.post('logout')
+            .then(response => {
+                console.log('ok');
+            })
+    }
+    const post = () => {
+        axios.post('/create/posts')
+            .then(response => {
+                console.log('ok');
+            })
+    }
+
     return (
         <Router>
             <div>
                 <Routes>
-                    <Route path="mypage" element={<MyPage />} >
+                    <Route path="mypage" element={<MyPage logout={logout} csrf_token={csrf_token}/>} >
                         <Route path="profile" element={<Profile />} />
                         <Route path="message" element={<Message />} />
                         <Route path="likes" element={<Likes />} />
                         <Route path="myposts" element={<MyPosts />} />
                     </Route>
                     <Route path="/timeline" element={<TimeLine />} />
-                    <Route path="/practice" element={<Practice />} />
+                    <Route path="/practice" element={<Practice csrf_token={csrf_token} post={post}/>} />
                 </Routes>
             </div>
         </Router>
