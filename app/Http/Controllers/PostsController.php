@@ -29,6 +29,20 @@ class PostsController extends Controller
         return redirect('/create');
     }
 
+    public function upload(Request $request)
+    {
+        $post = new Post;
+        $video = $request->file('video');
+
+        $path = Storage::disk('s3')->putFile('image', $video, 'public');
+
+        $post->image_path = Storage::disk('s3')->url($path);
+
+        $post->save();
+
+        return redirect('/mypage');
+    }
+
     public function output()
     {
         $user_images = Post::all();

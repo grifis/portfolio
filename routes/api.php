@@ -29,4 +29,6 @@ Route::get('/movie', function(Request $request) {
 
 Route::post('/api/logout', 'Auth\RegisterController@showRegistrationForm')->name('register');
 
+Route::post('/api/upload', 'App\Http\Controllers\PostsController@upload');
+
 

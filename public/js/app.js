@@ -5685,6 +5685,7 @@ var WebcamComponent = function WebcamComponent() {
 };
 
 function Practice(props) {
+  axios.defaults.headers.common['X-CSRF-Token'] = props.csrf_token;
   var webcamRef = react__WEBPACK_IMPORTED_MODULE_0__.useRef(null);
   var mediaRecorderRef = react__WEBPACK_IMPORTED_MODULE_0__.useRef(null);
 
@@ -5726,7 +5727,7 @@ function Practice(props) {
     mediaRecorderRef.current.stop();
     setCapturing(false);
   }, [mediaRecorderRef, webcamRef, setCapturing]);
-  var handleDownload = react__WEBPACK_IMPORTED_MODULE_0__.useCallback(function () {
+  var handlePost = react__WEBPACK_IMPORTED_MODULE_0__.useCallback(function () {
     //recordedChunksが変化した時に再計算
     if (recordedChunks.length) {
       var blob = new Blob(recordedChunks, {
@@ -5735,15 +5736,21 @@ function Practice(props) {
       });
       var url = URL.createObjectURL(blob); //メモリに保存されたblobにアクセス可能なURLを生成
 
-      var a = document.createElement("a"); //HTML要素を生成
-
-      document.body.appendChild(a); //生成したaタグの要素を実際のHTML要素へ追加
-
-      a.style = "display: none";
-      a.href = url;
-      a.download = "react-webcam-stream-capture.webm"; //ダウンロード時の名前を指定
-
-      a.click();
+      var data = new FormData();
+      data.append('video', blob);
+      var axiosPost = axios.create({
+        xsrfHeaderName: props.csrf_token,
+        withCredentials: true
+      });
+      axiosPost.post('/api/upload', data, {
+        headers: {
+          'content-type': 'multipart/form-data'
+        }
+      }).then(function (res) {
+        console.log('success');
+      })["catch"](function (response) {
+        console.log(response);
+      });
       window.URL.revokeObjectURL(url); //メモリの解放
 
       setRecordedChunks([]);
@@ -5764,8 +5771,8 @@ function Practice(props) {
       onClick: handleStartCaptureClick,
       children: "Start Capture"
     }), recordedChunks.length > 0 && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("button", {
-      onClick: handleDownload,
-      children: "Download"
+      onClick: handlePost,
+      children: "Upload"
     })]
   });
 }
