@@ -34,7 +34,7 @@ Route::get('/create', function () {
     return view('create');
 });
 
-Route::post('/create/posts', 'App\Http\Controllers\PostsController@create');
+Route::post('/create/posts', 'App\Http\Controllers\PostsController@upload');
 
 Route::get('/output', 'App\Http\Controllers\PostsController@output');
 

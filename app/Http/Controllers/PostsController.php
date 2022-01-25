@@ -40,7 +40,7 @@ class PostsController extends Controller
 
         $post->save();
 
-        return redirect('/mypage');
+        return ;
     }
 
     public function output()

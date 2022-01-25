@@ -22,7 +22,8 @@ import axios from "axios";
 function App() {
     const csrftoken = document.head.querySelector('meta[name="csrf-token"]').content;
     const [csrf_token, setCsrf_token] = useState({csrftoken});
-    const logout = () => {
+    const logout = (e) => {
+        e.preventDefault();
         axios.post('logout')
             .then(response => {
                 console.log('ok');
@@ -46,7 +47,7 @@ function App() {
                         <Route path="myposts" element={<MyPosts />} />
                     </Route>
                     <Route path="/timeline" element={<TimeLine />} />
-                    <Route path="/practice" element={<Practice csrf_token={csrf_token} post={post}/>} />
+                    <Route path="/practice" element={<Practice logout={logout} csrf_token={csrf_token} post={post}/>} />
                 </Routes>
             </div>
         </Router>

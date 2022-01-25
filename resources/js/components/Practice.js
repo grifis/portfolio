@@ -1,11 +1,12 @@
 import React from 'react';
 import Webcam from "react-webcam";
 import NavBar from './NavBar';
+import { useNavigate } from 'react-router-dom';
 
 const WebcamComponent = () => <Webcam />;
 
 function Practice(props) {
-    axios.defaults.headers.common['X-CSRF-Token'] = props.csrf_token;
+    const navigate = useNavigate();
     const webcamRef = React.useRef(null);
     const mediaRecorderRef = React.useRef(null);
     const [capturing, setCapturing] = React.useState(false);
@@ -44,23 +45,21 @@ function Practice(props) {
 
 
 
-    const handlePost = React.useCallback(() => {  //recordedChunksが変化した時に再計算
+    const handleDownload = React.useCallback((e) => {  //recordedChunksが変化した時に再計算
+        e.preventDefault();
         if (recordedChunks.length) {
             const blob = new Blob(recordedChunks, {   //Blobはバイナリを扱う
                 type: "video/webm"
             });
             const url = URL.createObjectURL(blob);  //メモリに保存されたblobにアクセス可能なURLを生成
             const data = new FormData();
-            data.append('video', blob);
-            const axiosPost = axios.create({
-                xsrfHeaderName: props.csrf_token,
-                withCredentials: true
-            })
-            axiosPost.post('/api/upload', data, {
+            data.append('video', blob, 'sample.webm');
+            axios.post('/create/posts', data, {
                 headers: { 'content-type': 'multipart/form-data'}
             })
                 .then(res => {
                     console.log('success')
+                    navigate('/mypage')
                 }).catch(response => {
                 console.log(response)
             });
@@ -71,7 +70,7 @@ function Practice(props) {
 
     return (
         <div>
-            <NavBar />
+            <NavBar logout={props.logout} csrf_token={props.csrf_token}/>
             <h1>面接練習</h1>
             <Webcam audio={true} muted={true} ref={webcamRef} width="60%"/>
             {capturing ? (
@@ -80,8 +79,12 @@ function Practice(props) {
                 <button onClick={handleStartCaptureClick}>Start Capture</button>
             )}
             {recordedChunks.length > 0 && (
-                <button onClick={handlePost}>Upload</button>
+                <button onClick={handleDownload}>Download</button>
             )}
+            <form>
+                <input type='hidden' value={props.csrf_token}/>
+                <input type='submit' onClick={handleDownload} value="アップロード"/>
+            </form>
         </div>
     );
 }

@@ -5370,7 +5370,8 @@ function App() {
       csrf_token = _useState2[0],
       setCsrf_token = _useState2[1];
 
-  var logout = function logout() {
+  var logout = function logout(e) {
+    e.preventDefault();
     axios__WEBPACK_IMPORTED_MODULE_13___default().post('logout').then(function (response) {
       console.log('ok');
     });
@@ -5410,6 +5411,7 @@ function App() {
         }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_14__.jsx)(react_router_dom__WEBPACK_IMPORTED_MODULE_16__.Route, {
           path: "/practice",
           element: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_14__.jsx)(_Practice__WEBPACK_IMPORTED_MODULE_5__["default"], {
+            logout: logout,
             csrf_token: csrf_token,
             post: post
           })
@@ -5661,6 +5663,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react_webcam__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-webcam */ "./node_modules/react-webcam/dist/react-webcam.js");
 /* harmony import */ var react_webcam__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_webcam__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var _NavBar__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./NavBar */ "./resources/js/components/NavBar.js");
+/* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router/index.js");
 /* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! react/jsx-runtime */ "./node_modules/react/jsx-runtime.js");
 function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
 
@@ -5680,12 +5683,13 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 
 
+
 var WebcamComponent = function WebcamComponent() {
   return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)((react_webcam__WEBPACK_IMPORTED_MODULE_1___default()), {});
 };
 
 function Practice(props) {
-  axios.defaults.headers.common['X-CSRF-Token'] = props.csrf_token;
+  var navigate = (0,react_router_dom__WEBPACK_IMPORTED_MODULE_4__.useNavigate)();
   var webcamRef = react__WEBPACK_IMPORTED_MODULE_0__.useRef(null);
   var mediaRecorderRef = react__WEBPACK_IMPORTED_MODULE_0__.useRef(null);
 
@@ -5727,8 +5731,10 @@ function Practice(props) {
     mediaRecorderRef.current.stop();
     setCapturing(false);
   }, [mediaRecorderRef, webcamRef, setCapturing]);
-  var handlePost = react__WEBPACK_IMPORTED_MODULE_0__.useCallback(function () {
+  var handleDownload = react__WEBPACK_IMPORTED_MODULE_0__.useCallback(function (e) {
     //recordedChunksが変化した時に再計算
+    e.preventDefault();
+
     if (recordedChunks.length) {
       var blob = new Blob(recordedChunks, {
         //Blobはバイナリを扱う
@@ -5737,17 +5743,14 @@ function Practice(props) {
       var url = URL.createObjectURL(blob); //メモリに保存されたblobにアクセス可能なURLを生成
 
       var data = new FormData();
-      data.append('video', blob);
-      var axiosPost = axios.create({
-        xsrfHeaderName: props.csrf_token,
-        withCredentials: true
-      });
-      axiosPost.post('/api/upload', data, {
+      data.append('video', blob, 'sample.webm');
+      axios.post('/create/posts', data, {
         headers: {
           'content-type': 'multipart/form-data'
         }
       }).then(function (res) {
         console.log('success');
+        navigate('/mypage');
       })["catch"](function (response) {
         console.log(response);
       });
@@ -5757,7 +5760,10 @@ function Practice(props) {
     }
   }, [recordedChunks]);
   return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxs)("div", {
-    children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_NavBar__WEBPACK_IMPORTED_MODULE_2__["default"], {}), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("h1", {
+    children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_NavBar__WEBPACK_IMPORTED_MODULE_2__["default"], {
+      logout: props.logout,
+      csrf_token: props.csrf_token
+    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("h1", {
       children: "\u9762\u63A5\u7DF4\u7FD2"
     }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)((react_webcam__WEBPACK_IMPORTED_MODULE_1___default()), {
       audio: true,
@@ -5771,8 +5777,17 @@ function Practice(props) {
       onClick: handleStartCaptureClick,
       children: "Start Capture"
     }), recordedChunks.length > 0 && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("button", {
-      onClick: handlePost,
-      children: "Upload"
+      onClick: handleDownload,
+      children: "Download"
+    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxs)("form", {
+      children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("input", {
+        type: "hidden",
+        value: props.csrf_token
+      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("input", {
+        type: "submit",
+        onClick: handleDownload,
+        value: "\u30A2\u30C3\u30D7\u30ED\u30FC\u30C9"
+      })]
     })]
   });
 }
