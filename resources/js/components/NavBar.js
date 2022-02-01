@@ -11,6 +11,7 @@ function NavBar(props) {
             <Link to="/mypage">マイページ</Link>
             <Link to="/timeline">タイムライン</Link>
             <Link to="/practice">面接練習</Link>
+            <p>{props.user.name}様</p>
         </div>
     )
 }

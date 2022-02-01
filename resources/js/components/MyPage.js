@@ -10,9 +10,9 @@ function MyPage(props) {
     return (
         <div>
             <div>
-                <NavBar logout={props.logout} csrf_token={props.csrf_token}/>
+                <NavBar logout={props.logout} csrf_token={props.csrf_token} user={props.user}/>
                 <h1>マイページ</h1>
-                <MyPageNav />
+                <MyPageNav user={props.user}/>
             </div>
         </div>
     );

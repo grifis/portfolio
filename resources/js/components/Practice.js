@@ -70,7 +70,7 @@ function Practice(props) {
 
     return (
         <div>
-            <NavBar logout={props.logout} csrf_token={props.csrf_token}/>
+            <NavBar logout={props.logout} csrf_token={props.csrf_token} user={props.user}/>
             <h1>面接練習</h1>
             <Webcam audio={true} muted={true} ref={webcamRef} width="60%"/>
             {capturing ? (

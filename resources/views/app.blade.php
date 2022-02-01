@@ -24,7 +24,7 @@
         <div id="app">
             <main class="py-4">
                 <div class="container py-5">
-                    <div id="apple"></div>
+                    <div id="apple" data-user={{ $user }}></div>
                 </div>
             </main>
         </div>

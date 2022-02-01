@@ -15,8 +15,40 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/mypage', function () {
-    return view('app');
+    $user = json_encode(Auth::user());
+    return view('app', compact('user'));
 })->middleware('auth');
+
+Route::get('/practice', function () {
+    $user = json_encode(Auth::user());
+    return view('app', compact('user'));
+})->middleware('auth');
+
+Route::get('/timeline', function () {
+    $user = json_encode(Auth::user());
+    return view('app', compact('user'));
+})->middleware('auth');
+
+Route::get('/mypage/likes', function () {
+    $user = json_encode(Auth::user());
+    return view('app', compact('user'));
+})->middleware('auth');
+
+Route::get('/mypage/message', function () {
+    $user = json_encode(Auth::user());
+    return view('app', compact('user'));
+})->middleware('auth');
+
+Route::get('/mypage/myposts', function () {
+    $user = json_encode(Auth::user());
+    return view('app', compact('user'));
+})->middleware('auth');
+
+Route::get('/mypage/profile', function () {
+    $user = json_encode(Auth::user());
+    return view('app', compact('user'));
+})->middleware('auth');
+
 
 Auth::routes();
 
