@@ -8,4 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 class Question extends Model
 {
     use HasFactory;
+
+    public function posts()
+    {
+        return $this->hasmany('App\Models\Post');
+    }
 }

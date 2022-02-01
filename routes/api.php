@@ -22,13 +22,32 @@ Route::get('/user', function (Request $request) {
     return response()->json(['users' => $users]);
 });
 
-Route::get('/movie', function(Request $request) {
-    $movie = App\Models\Post::all();
+/*Route::get('/movie', function(Request $request) {
+    $movie = DB::table('posts')
+        ->leftJoin('questions','posts.question_id','=','questions.id')
+        ->leftJoin('users','posts.user_id','=','users.id')
+        ->get();
     return response()->json(['movie' => $movie]);
 });
+*/
+
+/*
+Route::get('/movie', function(Request $request) {
+    $movie = App\Models\Question::with('posts')->get();
+    return response()->json(['movie' => $movie]);
+});
+ */
+
+Route::get('/movie', function(Request $request) {
+    $movie = App\Models\Post::with('question', 'user')->get();
+    return response()->json(['movie' => $movie]);
+});
+
 
 Route::post('/api/logout', 'Auth\RegisterController@showRegistrationForm')->name('register');
 
 Route::post('/upload', 'App\Http\Controllers\PostsController@upload');
+
+Route::post('/userUpload', 'App\Http\Controllers\PostsController@userUpload');
 
 

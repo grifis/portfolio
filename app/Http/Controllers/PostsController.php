@@ -22,7 +22,7 @@ class PostsController extends Controller
 
         $path = Storage::disk('s3')->putFile('image', $image, 'public');
 
-        $post->image_path = Storage::disk('s3')->url($path);
+        $post->video_path = Storage::disk('s3')->url($path);
 
         $post->save();
 
@@ -33,13 +33,26 @@ class PostsController extends Controller
     {
         $post = new Post;
         $video = $request->file('video');
+        $id = $request->input('userId');
 
         $path = Storage::disk('s3')->putFile('image', $video, 'public');
 
-        $post->image_path = Storage::disk('s3')->url($path);
+        $post->video_path = Storage::disk('s3')->url($path);
+        $post->user_id = $id;
+        $post->body = 'sample';
+        $post->question_id = 1;
 
         $post->save();
 
+        return ;
+    }
+
+    public function userUpload(Request $request)
+    {
+        $post = new Post;
+        $id = $request->input('userId');
+        $post->user_id = $id;
+        $post->save();
         return ;
     }
 

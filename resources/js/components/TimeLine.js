@@ -7,7 +7,7 @@ function TimeLine(props) {
 
     const [users, setUsers] = useState([]);
     const [movies, setMovies] = useState([]);
-    const [userName, setUserName] = useState({
+    const [userInfo, setUserInfo] = useState({
         name: "",
         id: "",
     });
@@ -20,7 +20,7 @@ function TimeLine(props) {
     const getUsers = async() => {
         const response = await axios.get('/api/user');
         setUsers(response.data.users)
-        setUserName({
+        setUserInfo({
             name: response.data.users[0].name,
             id: response.data.users[0].id
         })
@@ -39,16 +39,16 @@ function TimeLine(props) {
             <div>
                 {movies.map((movie) =>
                     <div key={movie.id}>
-                        <p>質問文:学生時代に力を入れたことは何ですか？</p>
-                        <video src={`${movie.image_path}`} controls width="40%"></video>
-                        <p>ユーザー名</p>
+                        <p>質問文：{movie.question.question}</p>
+                        <video src={`${movie.video_path}`} controls width="40%"></video>
+                        <p>名前：{movie.user.name}</p>
                     </div>
                 )}
             </div>
             <ul>
                 {users.map((user) => <li key={user.id}>{user.name}</li>)}
             </ul>
-            <p>{userName.name}</p>
+            <p>{userInfo.name}</p>
         </div>
     );
 };

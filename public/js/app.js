@@ -5594,7 +5594,7 @@ function NavBar(props) {
       to: "/practice",
       children: "\u9762\u63A5\u7DF4\u7FD2"
     }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxs)("p", {
-      children: [props.user.name, "\u69D8"]
+      children: [props.user.name, "\u69D8 ID:", props.user.id]
     })]
   });
 }
@@ -5699,7 +5699,8 @@ function Practice(props) {
 
       var data = new FormData();
       data.append('video', blob, 'sample.webm');
-      axios.post('/create/posts', data, {
+      data.append('userId', props.user.id);
+      axios.post('/api/upload', data, {
         headers: {
           'content-type': 'multipart/form-data'
         }
@@ -5728,14 +5729,11 @@ function Practice(props) {
       width: "60%"
     }), capturing ? /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("button", {
       onClick: handleStopCaptureClick,
-      children: "Stop Capture"
+      children: "\u30B9\u30C8\u30C3\u30D7"
     }) : /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("button", {
       onClick: handleStartCaptureClick,
-      children: "Start Capture"
-    }), recordedChunks.length > 0 && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("button", {
-      onClick: handleDownload,
-      children: "Download"
-    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxs)("form", {
+      children: "\u30B9\u30BF\u30FC\u30C8"
+    }), recordedChunks.length > 0 && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxs)("form", {
       children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("input", {
         type: "hidden",
         value: props.csrf_token
@@ -5811,8 +5809,8 @@ function TimeLine(props) {
     id: ""
   }),
       _useState6 = _slicedToArray(_useState5, 2),
-      userName = _useState6[0],
-      setUserName = _useState6[1];
+      userInfo = _useState6[0],
+      setUserInfo = _useState6[1];
 
   (0,react__WEBPACK_IMPORTED_MODULE_1__.useEffect)(function () {
     getUsers();
@@ -5832,7 +5830,7 @@ function TimeLine(props) {
             case 2:
               response = _context.sent;
               setUsers(response.data.users);
-              setUserName({
+              setUserInfo({
                 name: response.data.users[0].name,
                 id: response.data.users[0].id
               });
@@ -5888,14 +5886,14 @@ function TimeLine(props) {
     }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("div", {
       children: movies.map(function (movie) {
         return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxs)("div", {
-          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("p", {
-            children: "\u8CEA\u554F\u6587:\u5B66\u751F\u6642\u4EE3\u306B\u529B\u3092\u5165\u308C\u305F\u3053\u3068\u306F\u4F55\u3067\u3059\u304B\uFF1F"
+          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxs)("p", {
+            children: ["\u8CEA\u554F\u6587\uFF1A", movie.question.question]
           }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("video", {
-            src: "".concat(movie.image_path),
+            src: "".concat(movie.video_path),
             controls: true,
             width: "40%"
-          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("p", {
-            children: "\u30E6\u30FC\u30B6\u30FC\u540D"
+          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxs)("p", {
+            children: ["\u540D\u524D\uFF1A", movie.user.name]
           })]
         }, movie.id);
       })
@@ -5906,7 +5904,7 @@ function TimeLine(props) {
         }, user.id);
       })
     }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("p", {
-      children: userName.name
+      children: userInfo.name
     })]
   });
 }

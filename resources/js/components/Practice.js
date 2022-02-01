@@ -54,8 +54,9 @@ function Practice(props) {
             const url = URL.createObjectURL(blob);  //メモリに保存されたblobにアクセス可能なURLを生成
             const data = new FormData();
             data.append('video', blob, 'sample.webm');
-            axios.post('/create/posts', data, {
-                headers: { 'content-type': 'multipart/form-data'}
+            data.append('userId', props.user.id);
+            axios.post('/api/upload', data, {
+                headers: { 'content-type': 'multipart/form-data'},
             })
                 .then(res => {
                     console.log('success')
@@ -74,17 +75,17 @@ function Practice(props) {
             <h1>面接練習</h1>
             <Webcam audio={true} muted={true} ref={webcamRef} width="60%"/>
             {capturing ? (
-                <button onClick={handleStopCaptureClick}>Stop Capture</button>
+                <button onClick={handleStopCaptureClick}>ストップ</button>
             ) : (
-                <button onClick={handleStartCaptureClick}>Start Capture</button>
+                <button onClick={handleStartCaptureClick}>スタート</button>
             )}
             {recordedChunks.length > 0 && (
-                <button onClick={handleDownload}>Download</button>
+                <form>
+                    <input type='hidden' value={props.csrf_token}/>
+                    <input type='submit' onClick={handleDownload} value="アップロード"/>
+                </form>
             )}
-            <form>
-                <input type='hidden' value={props.csrf_token}/>
-                <input type='submit' onClick={handleDownload} value="アップロード"/>
-            </form>
+
         </div>
     );
 }
