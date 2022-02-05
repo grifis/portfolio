@@ -49,6 +49,11 @@ Route::get('/mypage/profile', function () {
     return view('app', compact('user'));
 })->middleware('auth');
 
+Route::get('/timeline/{id}', function () {
+    $user = json_encode(Auth::user());
+    return view('app', compact('user'));
+})->middleware('auth');
+
 
 Auth::routes();
 

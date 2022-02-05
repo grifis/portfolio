@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Post;
+use App\Models\Question;
 use Illuminate\Support\Facades\Storage;
 
 class PostsController extends Controller
@@ -33,14 +34,16 @@ class PostsController extends Controller
     {
         $post = new Post;
         $video = $request->file('video');
-        $id = $request->input('userId');
+        $userId = $request->input('userId');
+        $questionId = $request->input('questionId');
+
 
         $path = Storage::disk('s3')->putFile('image', $video, 'public');
 
         $post->video_path = Storage::disk('s3')->url($path);
-        $post->user_id = $id;
+        $post->user_id = $userId;
         $post->body = 'sample';
-        $post->question_id = 1;
+        $post->question_id = $questionId;
 
         $post->save();
 
@@ -60,5 +63,11 @@ class PostsController extends Controller
     {
         $user_images = Post::all();
         return view('output', ['user_images' => $user_images]);
+    }
+
+    public function question()
+    {
+        $question = Question::all();
+        return response()->json(['que' => $question]);
     }
 }

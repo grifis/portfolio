@@ -50,4 +50,10 @@ Route::post('/upload', 'App\Http\Controllers\PostsController@upload');
 
 Route::post('/userUpload', 'App\Http\Controllers\PostsController@userUpload');
 
+Route::get('/question', 'App\Http\Controllers\PostsController@question');
+
+Route::get('/timeline/{post}', function($postId) {
+    $post = App\Models\Post::with('question', 'user')->find($postId);
+    return response()->json(['post' => $post]);
+});
 
