@@ -21,6 +21,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'tag_id',
     ];
 
     /**
@@ -45,5 +46,10 @@ class User extends Authenticatable
     public function posts()
     {
         return $this->hasMany('App\Models\Post');
+    }
+
+    public function tag()
+    {
+        return $this->belongsTo('App\Models\Tag');
     }
 }

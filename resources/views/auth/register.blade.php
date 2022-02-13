@@ -61,6 +61,28 @@
                             </div>
                         </div>
 
+                        <div class="row mb-3">
+                            <label for="tag" class="col-md-4 col-form-label text-md-end">志望業界(一つ選択)</label>
+
+                            <div class="col-md-6">
+                                <select id="tag" class="form-control @error('password') is-invalid @enderror" name="tag" required autocomplete="new-tag">
+                                    <option value=1>メーカー</option>
+                                    <option value=2>小売</option>
+                                    <option value=3>サービス</option>
+                                    <option value=4>ソフトウェア・通信</option>
+                                    <option value=5>商社</option>
+                                    <option value=6>金融</option>
+                                    <option value=7>マスコミ</option>
+                                    <option value=8>官公庁・公社・団体</option>
+                                </select>
+                                @error('tag')
+                                <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
+                            </div>
+                        </div>
+
                         <div class="row mb-0">
                             <div class="col-md-6 offset-md-4">
                                 <button type="submit" class="btn btn-primary">

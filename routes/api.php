@@ -1,6 +1,8 @@
 <?php
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use App\Models\Post;
 
 /*
 |--------------------------------------------------------------------------
@@ -39,21 +41,32 @@ Route::get('/movie', function(Request $request) {
  */
 
 Route::get('/movie', function(Request $request) {
-    $movie = App\Models\Post::with('question', 'user')->get();
+    $movie = App\Models\Post::with('question', 'user', 'tag')->latest()->get();
     return response()->json(['movie' => $movie]);
 });
 
+Route::get('myposts', function(Request $request) {
+    $id = $request->input("id");
+    $myposts = App\Models\Post::with('question', 'user')->where('user_id', $id)->get();
+    return response()->json(['myposts' => $myposts]);
+});
 
 Route::post('/api/logout', 'Auth\RegisterController@showRegistrationForm')->name('register');
 
 Route::post('/upload', 'App\Http\Controllers\PostsController@upload');
 
-Route::post('/userUpload', 'App\Http\Controllers\PostsController@userUpload');
-
 Route::get('/question', 'App\Http\Controllers\PostsController@question');
 
-Route::get('/timeline/{post}', function($postId) {
-    $post = App\Models\Post::with('question', 'user')->find($postId);
-    return response()->json(['post' => $post]);
-});
+Route::get('/timeline/{postId}', 'App\Http\Controllers\PostsController@timelinePost');
 
+Route::get('/mypost/{myPostId}', 'App\Http\Controllers\PostsController@showMyPost');
+
+Route::get('/isLiked/{id}', 'App\Http\Controllers\PostsController@isLiked');
+
+Route::get('/likesCount/{id}', 'App\Http\Controllers\PostsController@likesCount');
+
+Route::post('/like/{id}', 'App\Http\Controllers\PostsController@like');
+
+Route::delete('/unlike/{id}', 'App\Http\Controllers\PostsController@unlike');
+
+Route::delete('/delete/{deleteId}', 'App\Http\Controllers\PostsController@deletePost');

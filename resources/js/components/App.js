@@ -9,14 +9,12 @@ import Likes from "./mypage/Likes";
 import MyPosts from "./mypage/MyPosts";
 import TimelineDetail from "./TimelineDetail";
 import NavBar from './NavBar';
-
-import {
-    BrowserRouter as Router,
-    Routes,
-    Route
-} from 'react-router-dom';
+import MyPostsIndex from "./mypage/MyPostsIndex";
+import MyPostsDetail from "./mypage/MyPostsDetail";
+import {BrowserRouter as Router, Routes, Route} from 'react-router-dom';
 import axios from "axios";
 import TimeLineIndex from "./TimelineIndex";
+import { Grid } from '@material-ui/core';
 
 
 function App() {
@@ -28,7 +26,7 @@ function App() {
     let stock  = [];
     if (element && element.dataset.user) {
         stock = JSON.parse(element.dataset.user)
-    };
+    }
 
     const [user, setUser] = useState([]);
     useEffect(() => {
@@ -65,22 +63,33 @@ function App() {
 
     return (
         <Router>
-            <div>
-                <NavBar logout={logout} csrf_token={csrf_token} user={user}/>
-                <Routes>
-                    <Route path="mypage" element={<MyPage logout={logout} csrf_token={csrf_token} user={user}/>} >
-                        <Route path="profile" element={<Profile logout={logout} csrf_token={csrf_token} user={user}/>} />
-                        <Route path="message" element={<Message logout={logout} csrf_token={csrf_token} user={user}/>} />
-                        <Route path="likes" element={<Likes logout={logout} csrf_token={csrf_token} user={user}/>}/>
-                        <Route path="myposts" element={<MyPosts logout={logout} csrf_token={csrf_token} user={user}/>} />
-                    </Route>
-                    <Route path="/timeline" element={<TimeLine logout={logout} csrf_token={csrf_token} user={user}  />} >
-                        <Route index element={<TimeLineIndex logout={logout} csrf_token={csrf_token} user={user} movies={movies} users={users} />} />
-                        <Route path=":id" element={<TimelineDetail movies={movies} users={users} />} />
-                    </Route>
-                    <Route path="/practice" element={<Practice logout={logout} csrf_token={csrf_token} post={post} user={user}/>} />
-                </Routes>
-            </div>
+            <Grid container direction="column">
+                <Grid item>
+                    <NavBar logout={logout} csrf_token={csrf_token} user={user}/>
+                </Grid>
+                <Grid item container>
+                    <Grid item sm={1} />
+                    <Grid item xs={12} sm={10}>
+                    <Routes>
+                        <Route path="mypage" element={<MyPage logout={logout} csrf_token={csrf_token} user={user}/>} >
+                            <Route path="profile" element={<Profile logout={logout} csrf_token={csrf_token} user={user}/>} />
+                            <Route path="message" element={<Message logout={logout} csrf_token={csrf_token} user={user}/>} />
+                            <Route path="likes" element={<Likes logout={logout} csrf_token={csrf_token} user={user}/>}/>
+                            <Route path="myposts" element={<MyPosts logout={logout} csrf_token={csrf_token} user={user}/>} >
+                                <Route index element={<MyPostsIndex logout={logout} csrf_token={csrf_token} user={user} movies={movies} users={users} />} />
+                                <Route path=":id" element={<MyPostsDetail movies={movies} users={users} />} />
+                            </Route>
+                        </Route>
+                        <Route path="timeline" element={<TimeLine />} >
+                            <Route index element={<TimeLineIndex logout={logout} csrf_token={csrf_token} user={user} movies={movies} users={users} getMovies={getMovies}/>} />
+                            <Route path=":id" element={<TimelineDetail movies={movies} user={user} csrf_token={csrf_token} />} />
+                        </Route>
+                        <Route path="practice" element={<Practice logout={logout} csrf_token={csrf_token} post={post} user={user}/>} />
+                    </Routes>
+                    </Grid>
+                    <Grid item sm={1} />
+                </Grid>
+            </Grid>
         </Router>
     )
 }

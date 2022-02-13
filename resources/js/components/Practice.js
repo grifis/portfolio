@@ -68,13 +68,14 @@ function Practice(props) {
             const data = new FormData();
             data.append('video', blob, 'sample.webm');
             data.append('userId', props.user.id);
+            data.append('tagId', props.user.tag_id);
             data.append('questionId', questions.id);
             axios.post('/api/upload', data, {
                 headers: { 'content-type': 'multipart/form-data'},
             })
                 .then(res => {
                     console.log('success')
-                    navigate('/mypage')
+                    navigate('/timeline')
                 }).catch(response => {
                 console.log(response)
             });
@@ -85,7 +86,6 @@ function Practice(props) {
 
     return (
         <div>
-            <h1>面接練習</h1>
             <Webcam audio={true} muted={true} ref={webcamRef} width="60%"/>
             <button onClick={getQuestions}>質問チェンジ</button>
             {capturing ? (

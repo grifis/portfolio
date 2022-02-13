@@ -18,4 +18,14 @@ class Post extends Model
     {
         return $this->belongsTo('App\Models\Question');
     }
+
+    public function tag()
+    {
+        return $this->belongsTo('App\Models\Tag');
+    }
+
+    public function likes()
+    {
+        return $this->hasmany(Like::class, 'post_id');
+    }
 }

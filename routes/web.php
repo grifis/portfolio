@@ -54,6 +54,11 @@ Route::get('/timeline/{id}', function () {
     return view('app', compact('user'));
 })->middleware('auth');
 
+Route::get('/mypage/myposts/{id}', function () {
+    $user = json_encode(Auth::user());
+    return view('app', compact('user'));
+})->middleware('auth');
+
 
 Auth::routes();
 

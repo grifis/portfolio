@@ -1,9 +1,12 @@
 import React from 'react';
+import { Outlet } from "react-router-dom";
 
-function MyPosts() {
+function MyPosts(props) {
     return (
-        <h1>自分の投稿</h1>
+        <div>
+            <Outlet user={props.user}/>
+        </div>
     );
-};
+}
 
 export default MyPosts;
