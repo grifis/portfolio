@@ -121,4 +121,19 @@ class PostsController extends Controller
         $count = Like::where('post_id', $id)->count();
         return response()->json(['count' => $count]);
     }
+
+    public function movie(Request $request)
+    {
+        $movie = Post::with('question', 'user', 'tag' ,'likes')->latest()->paginate(4);
+        return response()->json(['movie' => $movie]);
+    }
+
+    public function likePosts(Request $request)
+    {
+        $userId = $request->input('id');
+        $posts = Post::with('question', 'user', 'tag')->whereHas('likes', function($q) use($userId){
+            $q->where('user_id', $userId);
+        })->paginate(4);
+        return response()->json(['posts' => $posts]);
+    }
 }

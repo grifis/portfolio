@@ -29,22 +29,22 @@ Route::get('/timeline', function () {
     return view('app', compact('user'));
 })->middleware('auth');
 
-Route::get('/mypage/likes', function () {
+Route::get('/likes', function () {
     $user = json_encode(Auth::user());
     return view('app', compact('user'));
 })->middleware('auth');
 
-Route::get('/mypage/message', function () {
+Route::get('/message', function () {
     $user = json_encode(Auth::user());
     return view('app', compact('user'));
 })->middleware('auth');
 
-Route::get('/mypage/myposts', function () {
+Route::get('/myposts', function () {
     $user = json_encode(Auth::user());
     return view('app', compact('user'));
 })->middleware('auth');
 
-Route::get('/mypage/profile', function () {
+Route::get('/profile', function () {
     $user = json_encode(Auth::user());
     return view('app', compact('user'));
 })->middleware('auth');
@@ -54,7 +54,12 @@ Route::get('/timeline/{id}', function () {
     return view('app', compact('user'));
 })->middleware('auth');
 
-Route::get('/mypage/myposts/{id}', function () {
+Route::get('/myposts/{id}', function () {
+    $user = json_encode(Auth::user());
+    return view('app', compact('user'));
+})->middleware('auth');
+
+Route::get('/likes/{id}', function () {
     $user = json_encode(Auth::user());
     return view('app', compact('user'));
 })->middleware('auth');

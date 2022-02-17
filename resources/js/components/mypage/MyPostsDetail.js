@@ -32,7 +32,7 @@ function MyPostsDetail(props) {
                 <video src={`${myPostDetail.path}`} controls width="40%"></video>
                 <p>名前：{myPostDetail.name}</p>
             </div>
-            <Link to={'/mypage/myposts'}>戻る</Link>
+            <Link to={'/myposts'}>戻る</Link>
         </div>
     );
 };

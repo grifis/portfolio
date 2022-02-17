@@ -1,43 +1,38 @@
-import React, {useEffect, useState} from 'react';
-import Test from './Test';
+import React, { useState, useEffect } from 'react';
 import { Link } from "react-router-dom";
+import axios from "axios";
 import Button from '@material-ui/core/Button';
 import Card from '@material-ui/core/Card';
 import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
-import {Drawer, Grid, InputBase, InputLabel, MenuItem, Toolbar} from '@material-ui/core';
+import {Box, Drawer, Grid, InputBase, InputLabel, MenuItem, Toolbar} from '@material-ui/core';
 import { makeStyles, alpha} from '@material-ui/core/styles';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 import SearchIcon from '@material-ui/icons/Search';
 import InfiniteScroll  from "react-infinite-scroller";
-import { IconButton } from "@material-ui/core";
-import FavoriteBorderIcon from "@material-ui/icons/FavoriteBorder";
-import FavoriteIcon from "@material-ui/icons/Favorite";
-import axios from "axios";
 
-
-
-function TimeLineIndex(props) {
-
-    const movies = props.movies;
+function LikesIndex(props) {
+    const likePosts = props.likePosts
+    const getLikePosts = props.getLikePosts
     const windowWidth = window.outerWidth;
     const drawerWidth = windowWidth/4;
     const [tag, setTag] = React.useState('');
     const [word, setWord] = React.useState('');
 
-
     useEffect(() => {
-        reset()
-    }, [])
+        getLikePosts()
+        console.log('get MyPosts')
+    }, []);
 
-
-    const reset = () => {
-        props.setMovies([]);
-        console.log('リセットされたよ');
-        props.setHasMore(true);
-    }
+    {/*const getLikePosts = async() => {
+        const queries = {id: props.user.id};
+        const response = await axios.get('/api/likePosts', {params: queries})
+        setLikePosts(response.data.posts)
+        console.log('setMyPosts completed');
+        console.log(response.data);
+    }*/}
 
     const tagChange = (event) => {
         setTag(event.target.value);
@@ -54,11 +49,11 @@ function TimeLineIndex(props) {
                 }
             }
         } else {
-                window.document.onkeydown = function(event){
-                    if (event.key === 'Enter') {
-                        console.log('nothing');
-                    }
+            window.document.onkeydown = function(event){
+                if (event.key === 'Enter') {
+                    console.log('nothing');
                 }
+            }
         }
     }
 
@@ -145,18 +140,17 @@ function TimeLineIndex(props) {
     //各スクロール要素
     const items = (
         <div>
-            {movies.map((movie) =>
-                <Card variant="outlined" key={movie.id} className={classes.menuButton}>
+            {likePosts.map((likePost) =>
+                <Card variant="outlined" key={likePost.id} className={classes.menuButton}>
                     <CardContent>
-                        <Typography color="textSecondary">ユーザー名:{movie.user.name}</Typography>
-                        <Typography color="textSecondary">質問文:{movie.question.question}</Typography>
-                        <Typography color="textSecondary">志望業界:{movie.tag.tag}</Typography>
+                        <Typography color="textSecondary">ユーザー名:{likePost.user.name}</Typography>
+                        <Typography color="textSecondary">質問文:{likePost.question.question}</Typography>
+                        <Typography color="textSecondary">志望業界:{likePost.tag.tag}</Typography>
                         <CardActions>
-                            <video src={`${movie.video_path}`} controls width="75%"/>
+                            <video src={`${likePost.video_path}`} controls width="75%"/>
                         </CardActions>
                         <CardActions>
-                            <Button variant="contained" color="primary" component={Link} to={`/timeline/${movie.id}`}>詳細</Button>
-                            <Test user={props.user} movie={movie}/>
+                            <Button variant="contained" color="primary" component={Link} to={`/likes/${likePost.id}`}>詳細</Button>
                         </CardActions>
                     </CardContent>
                 </Card>
@@ -167,14 +161,15 @@ function TimeLineIndex(props) {
     //ロード中に表示する項目
     const loader =<div className="loader" key={0}>Loading ...</div>;
 
+
     return (
         <div>
             <Grid item container >
                 <Grid item xs={8}>
                     <div>
-                        <Typography>タイムライン</Typography>
+                        <Typography>いいねした投稿</Typography>
                         <InfiniteScroll
-                            loadMore={props.getMovies}    //項目を読み込む際に処理するコールバック関数
+                            loadMore={getLikePosts}    //項目を読み込む際に処理するコールバック関数
                             hasMore={props.hasMore}         //読み込みを行うかどうかの判定
                             loader={loader}>      {/* 読み込み最中に表示する項目 */}
                             {items}             {/* 無限スクロールで表示する項目 */}
@@ -221,4 +216,4 @@ function TimeLineIndex(props) {
     );
 }
 
-export default TimeLineIndex;
+export default LikesIndex;

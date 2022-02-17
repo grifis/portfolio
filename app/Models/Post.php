@@ -28,4 +28,9 @@ class Post extends Model
     {
         return $this->hasmany(Like::class, 'post_id');
     }
+
+    public function getByLimit(int $limit_count = 4)
+    {
+        return $this->orderBy('updated_at', 'DESC')->paginate($limit_count);
+    }
 }

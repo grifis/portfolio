@@ -7,6 +7,7 @@ import MenuIcon from '@material-ui/icons/Menu';
 import IconButton from '@material-ui/core/IconButton';
 import { makeStyles } from '@material-ui/core/styles';
 
+
 function NavBar(props) {
 
     const [open, setOpen] = useState(false);
@@ -20,9 +21,14 @@ function NavBar(props) {
         },
         menuButton: {
             marginRight: theme.spacing(2),
+            color: "black"
         },
         title: {
             flexGrow: 1,
+        },
+        toolbar: theme.mixins.toolbar,
+        appBar: {
+            zIndex: theme.zIndex.drawer + 1,
         },
     }));
 
@@ -30,28 +36,28 @@ function NavBar(props) {
 
     return(
         <div className={classes.root}>
-        <AppBar position="static" style={{ color: "#e0f2f1", backgroundColor: "#004d40" }}>
+        <AppBar position="fixed"  className={classes.appBar}>
             <Toolbar>
                 <form className={classes.title}>
                     <input type='hidden' value={props.csrf_token}/>
                     <Button type='submit' onClick={props.logout} >ログアウト</Button>
                 </form>
-                <Typography className={classes.menuButton} color="inherit" component={Link} to="/mypage/myposts">マイページ</Typography>
-                <Typography className={classes.menuButton} color="primary" component={Link} to="/timeline">タイムライン</Typography>
-                <Typography className={classes.menuButton} component={Link} to="/practice">面接練習</Typography>
-                <Typography className={classes.menuButton}>{props.user.name}様 ID:{props.user.id}</Typography>
+                <Button className={classes.menuButton} component={Link} to="/timeline">タイムライン</Button>
+                <Button className={classes.menuButton} component={Link} to="/practice">面接練習</Button>
+                <Typography className={classes.menuButton}>{props.user.name}様 </Typography>
                 <IconButton className={classes.menuButton} onClick={toggleOpen}>
                     <MenuIcon />
                 </IconButton>
                 <Drawer anchor='right' open={open} onClose={toggleOpen}>
                     <Button component={Link} to="profile">プロフィール</Button>
-                    <Typography component={Link} to="message">メッセージ</Typography>
-                    <Typography component={Link} to="myposts">自分の投稿</Typography>
-                    <Typography component={Link} to="likes">いいねした投稿</Typography>
-                    <Typography component={Link} to="/practice">面接練習する</Typography>
+                    {/*<Button component={Link} to="message">メッセージ</Button>*/}
+                    <Button component={Link} to="myposts">自分の投稿</Button>
+                    <Button component={Link} to="likes">いいねした投稿</Button>
+                    <Button component={Link} to="/practice">面接練習する</Button>
                 </Drawer>
             </Toolbar>
         </AppBar>
+        <div className={classes.toolbar} />
         </div>
     )
 }

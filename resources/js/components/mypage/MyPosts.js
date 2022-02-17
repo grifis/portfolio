@@ -4,7 +4,7 @@ import { Outlet } from "react-router-dom";
 function MyPosts(props) {
     return (
         <div>
-            <Outlet user={props.user}/>
+            <Outlet/>
         </div>
     );
 }

@@ -1,6 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from "react-router-dom";
 import axios from "axios";
+import Button from '@material-ui/core/Button';
+import Card from '@material-ui/core/Card';
+import CardActions from '@material-ui/core/CardActions';
+import CardContent from '@material-ui/core/CardContent';
+import Typography from '@material-ui/core/Typography';
+import {Box, Drawer, Grid, InputBase, InputLabel, MenuItem, Toolbar} from '@material-ui/core';
+import { makeStyles, alpha} from '@material-ui/core/styles';
+import FormControl from '@material-ui/core/FormControl';
+import Select from '@material-ui/core/Select';
+import SearchIcon from '@material-ui/icons/Search';
+import InfiniteScroll  from "react-infinite-scroller";
 
 function MyPostsIndex(props) {
     const [myPosts, setMyPosts] = useState([]);
@@ -27,7 +38,7 @@ function MyPostsIndex(props) {
                         <p>質問文：{myPost.question.question}</p>
                         <video src={`${myPost.video_path}`} controls width="40%"></video>
                         <p>名前：{myPost.user.name}</p>
-                        <Link to={`/mypage/myposts/${myPost.id}`}>詳細</Link>
+                        <Link to={`/myposts/${myPost.id}`}>詳細</Link>
                     </div>
                 )}
             </div>

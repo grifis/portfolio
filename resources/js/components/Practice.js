@@ -3,6 +3,12 @@ import Webcam from "react-webcam";
 import NavBar from './NavBar';
 import { useNavigate } from 'react-router-dom';
 import axios from "axios";
+import Box from '@material-ui/core/Box';
+import Button from '@material-ui/core/Button';
+import { Grid } from '@material-ui/core';
+import Typography from '@material-ui/core/Typography';
+import {alpha, makeStyles} from "@material-ui/core/styles";
+
 
 const WebcamComponent = () => <Webcam />;
 
@@ -84,23 +90,43 @@ function Practice(props) {
         }
     }, [recordedChunks]);
 
+    const useStyles = makeStyles((theme) => ({
+        root: {
+            flexGrow: 1,
+        },
+        video: {
+            marginTop: theme.spacing(2),
+            marginRight: theme.spacing(5),
+        },
+    }));
+
+    const classes = useStyles();
+
     return (
-        <div>
-            <Webcam audio={true} muted={true} ref={webcamRef} width="60%"/>
-            <button onClick={getQuestions}>質問チェンジ</button>
-            {capturing ? (
-                <button onClick={handleStopCaptureClick}>ストップ</button>
-            ) : (
-                <button onClick={handleStartCaptureClick}>スタート</button>
-            )}
-            {recordedChunks.length > 0 && (
-                <form>
-                    <input type='hidden' value={props.csrf_token}/>
-                    <input type='submit' onClick={handleDownload} value="アップロード"/>
-                </form>
-            )}
-            <p>{questions.question}</p>
-        </div>
+        <Grid container direction="column">
+            <Grid item container>
+                <Grid item xs={9}>
+                    <Box className={classes.video}>
+                        <Webcam audio={true} muted={true} ref={webcamRef} width="100%"/>
+                    </Box>
+                </Grid>
+                <Grid item xs={3}>
+                    <Typography>{questions.question}</Typography>
+                    <Button color="primary" variant="contained" onClick={getQuestions}>質問チェンジ</Button>
+                    {capturing ? (
+                        <Button color="primary" variant="contained" onClick={handleStopCaptureClick}>ストップ</Button>
+                    ) : (
+                        <Button color="primary" variant="contained" onClick={handleStartCaptureClick}>スタート</Button>
+                    )}
+                    {recordedChunks.length > 0 && (
+                        <form>
+                            <input type='hidden' value={props.csrf_token}/>
+                            <Button　color="primary" variant="contained" type='submit' onClick={handleDownload} value="アップロード">アップロード</Button>
+                        </form>
+                    )}
+                </Grid>
+            </Grid>
+        </Grid>
     );
 }
 
