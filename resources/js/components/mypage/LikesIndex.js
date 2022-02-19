@@ -22,8 +22,8 @@ function LikesIndex(props) {
     const [word, setWord] = React.useState('');
 
     useEffect(() => {
-        getLikePosts()
-        console.log('get MyPosts')
+        reset();
+        console.log('get MyPosts');
     }, []);
 
     {/*const getLikePosts = async() => {
@@ -57,6 +57,11 @@ function LikesIndex(props) {
         }
     }
 
+    const reset = () => {
+        props.setLikePosts([]);
+        console.log('リセットされたよ');
+        props.setHasMoreLikePost(true);
+    }
 
 
     const useStyles = makeStyles((theme) => ({
@@ -170,7 +175,7 @@ function LikesIndex(props) {
                         <Typography>いいねした投稿</Typography>
                         <InfiniteScroll
                             loadMore={getLikePosts}    //項目を読み込む際に処理するコールバック関数
-                            hasMore={props.hasMore}         //読み込みを行うかどうかの判定
+                            hasMore={props.hasMoreLikePost}         //読み込みを行うかどうかの判定
                             loader={loader}>      {/* 読み込み最中に表示する項目 */}
                             {items}             {/* 無限スクロールで表示する項目 */}
                         </InfiniteScroll>

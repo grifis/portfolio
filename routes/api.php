@@ -64,6 +64,8 @@ Route::get('/isLiked/{id}', 'App\Http\Controllers\PostsController@isLiked');
 
 Route::get('/likesCount/{id}', 'App\Http\Controllers\PostsController@likesCount');
 
+Route::get('/tag', 'App\Http\Controllers\PostsController@tag');
+
 Route::post('/like/{id}', 'App\Http\Controllers\PostsController@like');
 
 Route::delete('/unlike/{id}', 'App\Http\Controllers\PostsController@unlike');

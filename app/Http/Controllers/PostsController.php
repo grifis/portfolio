@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Tag;
 use Illuminate\Http\Request;
 use App\Models\Post;
 use App\Models\Question;
@@ -109,10 +110,11 @@ class PostsController extends Controller
         $userId = $request->input('user_id');
         $postId = $request->input('post_id');
         $like = Like::where('user_id', $userId)->where('post_id', $postId)->first();
+        $count = Like::where('post_id', $postId)->count();
         if ($like) {
-            return response()->json(['bool' => True]);
+            return response()->json(['bool' => True, 'count'=>$count]);
         } else {
-            return response()->json(['bool' => False]);
+            return response()->json(['bool' => False, 'count'=>$count]);
         }
     }
 
@@ -125,7 +127,13 @@ class PostsController extends Controller
     public function movie(Request $request)
     {
         $movie = Post::with('question', 'user', 'tag' ,'likes')->latest()->paginate(4);
-        return response()->json(['movie' => $movie]);
+        $tag_id = $request->input('tag_id');
+        if ($tag_id) {
+            $movie = Post::with('question', 'user', 'tag' ,'likes')->whereHas('tag', function($q) use($tag_id){
+                $q->where('id', $tag_id);
+            })->latest()->paginate(4);
+        }
+        return response()->json(['movie' => $movie, 'tag_id' => $tag_id]);
     }
 
     public function likePosts(Request $request)
@@ -135,5 +143,11 @@ class PostsController extends Controller
             $q->where('user_id', $userId);
         })->paginate(4);
         return response()->json(['posts' => $posts]);
+    }
+
+    public function tag(Request $request)
+    {
+        $tag = Tag::all();
+        return response()->json(['tag' => $tag]);
     }
 }

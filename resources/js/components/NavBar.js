@@ -6,6 +6,11 @@ import Drawer from '@material-ui/core/Drawer';
 import MenuIcon from '@material-ui/icons/Menu';
 import IconButton from '@material-ui/core/IconButton';
 import { makeStyles } from '@material-ui/core/styles';
+import VideoLibraryIcon from '@material-ui/icons/VideoLibrary';
+import VideocamIcon from '@material-ui/icons/Videocam';
+import Tooltip from '@material-ui/core/Tooltip';
+import TimelineIcon from '@material-ui/icons/Timeline';
+import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 
 
 function NavBar(props) {
@@ -40,10 +45,22 @@ function NavBar(props) {
             <Toolbar>
                 <form className={classes.title}>
                     <input type='hidden' value={props.csrf_token}/>
-                    <Button type='submit' onClick={props.logout} >ログアウト</Button>
+                    <Tooltip title="ログアウト">
+                        <IconButton type='submit' onClick={props.logout}>
+                            <ExitToAppIcon />
+                        </IconButton>
+                    </Tooltip>
                 </form>
-                <Button className={classes.menuButton} component={Link} to="/timeline">タイムライン</Button>
-                <Button className={classes.menuButton} component={Link} to="/practice">面接練習</Button>
+                <Tooltip title="タイムライン">
+                    <IconButton className={classes.menuButton} component={Link} to="/timeline">
+                        <TimelineIcon />
+                    </IconButton>
+                </Tooltip>
+                <Tooltip title="面接練習">
+                    <IconButton className={classes.menuButton} component={Link} to="/practice">
+                        <VideocamIcon />
+                    </IconButton>
+                </Tooltip>
                 <Typography className={classes.menuButton}>{props.user.name}様 </Typography>
                 <IconButton className={classes.menuButton} onClick={toggleOpen}>
                     <MenuIcon />

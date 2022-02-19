@@ -21,22 +21,39 @@ import axios from "axios";
 
 function TimeLineIndex(props) {
 
-    const movies = props.movies;
     const windowWidth = window.outerWidth;
     const drawerWidth = windowWidth/4;
     const [tag, setTag] = React.useState('');
     const [word, setWord] = React.useState('');
+    const [tagList, setTagList] = React.useState([]);
+    const [movies, setMovies] = useState([]);
 
 
     useEffect(() => {
-        reset()
-    }, [])
+        getMovies(1)
+        return () => {
+            reset()
+        }
+    }, [tag])
 
+    const getMovies = async(page) => {
+        const queries = {tag_id: tag};
+        const response = await axios.get(`/api/movie?page=${page}`, {params: queries})
+        if (response.data.movie.data.length < 1) {
+            props.setHasMore(false);
+            console.log('no posts')
+        }
+        console.log(tag);
+        console.log(page);
+        console.log(movies);
+        console.log(response.data.movie.data);
+        console.log(response.data)
+        setMovies([...movies, ...response.data.movie.data])
+    }
 
     const reset = () => {
-        props.setMovies([]);
+        setMovies([]);
         console.log('リセットされたよ');
-        props.setHasMore(true);
     }
 
     const tagChange = (event) => {
@@ -174,10 +191,12 @@ function TimeLineIndex(props) {
                     <div>
                         <Typography>タイムライン</Typography>
                         <InfiniteScroll
-                            loadMore={props.getMovies}    //項目を読み込む際に処理するコールバック関数
+                            pageStart={1}
+                            initialLoad={false}
+                            loadMore={getMovies}    //項目を読み込む際に処理するコールバック関数
                             hasMore={props.hasMore}         //読み込みを行うかどうかの判定
                             loader={loader}>      {/* 読み込み最中に表示する項目 */}
-                            {items}             {/* 無限スクロールで表示する項目 */}
+                                {items}             {/* 無限スクロールで表示する項目 */}
                         </InfiniteScroll>
                     </div>
                 </Grid>
@@ -193,9 +212,9 @@ function TimeLineIndex(props) {
                                     value={tag}
                                     onChange={tagChange}
                                 >
-                                    <MenuItem value={1}>Ten</MenuItem>
-                                    <MenuItem value={2}>Twenty</MenuItem>
-                                    <MenuItem value={3}>Thirty</MenuItem>
+                                    {props.tagList.map((tag) =>
+                                        <MenuItem value={tag.id} key={tag.id}>{tag.tag}</MenuItem>
+                                    )}
                                 </Select>
                             </FormControl>
                             <div className={classes.search}>

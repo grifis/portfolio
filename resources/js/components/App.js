@@ -26,6 +26,7 @@ function App() {
     const [movies, setMovies] = useState([]);
     const [likePosts, setLikePosts] = useState([]);
     const [hasMore, setHasMore] = useState(true);
+    const [tagList, setTagList] = React.useState([]);
     const [hasMoreLikePost, setHasMoreLikePost] = useState(true);
     let stock  = [];
     if (element && element.dataset.user) {
@@ -35,9 +36,16 @@ function App() {
     const [user, setUser] = useState([]);
     useEffect(() => {
         getUsers()
+        getTagList()
         setUser(stock)
         console.log('setUser completed')
     }, []);
+
+    const getTagList = async () => {
+        const response = await
+            axios.get(`/api/tag`)
+        setTagList(response.data.tag);
+    }
 
     const logout = () => {
         axios.post('/logout')
@@ -58,18 +66,7 @@ function App() {
         console.log('setUsers completed')
     }
 
-    const getMovies = async(page) => {
-        const response = await axios.get(`/api/movie?page=${page}`)
-        if (response.data.movie.data.length < 1) {
-            setHasMore(false);
-            console.log('no posts')
-            return;
-        }
-        console.log(movies);
-        console.log(response.data.movie.data);
-        setMovies([...movies, ...response.data.movie.data])
-        console.log('おわっちょ')
-    }
+
 
     const getLikePosts = async(page) => {
         const queries = {id: user.id};
@@ -79,8 +76,8 @@ function App() {
             console.log('no posts')
             return;
         }
-        console.log(...likePosts)
-        console.log(...response.data.posts.data)
+        console.log(likePosts)
+        console.log(response.data.posts.data)
         setLikePosts([...likePosts, ...response.data.posts.data])
     }
 
@@ -96,8 +93,8 @@ function App() {
                     <Routes>
                         <Route path="profile" element={<Profile logout={logout} csrf_token={csrf_token} user={user}/>} />
                         <Route path="message" element={<Message logout={logout} csrf_token={csrf_token} user={user}/>} />
-                        <Route path="likes" element={<Likes logout={logout} csrf_token={csrf_token} user={user}/>}>
-                            <Route index element={<LikesIndex logout={logout} csrf_token={csrf_token} user={user}  users={users} likePosts={likePosts} getLikePosts={getLikePosts}/>} />
+                        <Route path="likes" element={<Likes />}>
+                            <Route index element={<LikesIndex logout={logout} csrf_token={csrf_token} user={user}  likePosts={likePosts} getLikePosts={getLikePosts} hasMoreLikePost={hasMoreLikePost} setLikePosts={setLikePosts} setHasMoreLikePost={setHasMoreLikePost}/>} />
                             <Route path=":id" element={<LikesDetail movies={movies} users={users} />} />
                         </Route>
                         <Route path="myposts" element={<MyPosts logout={logout} csrf_token={csrf_token} user={user}/>} >
@@ -105,7 +102,7 @@ function App() {
                             <Route path=":id" element={<MyPostsDetail movies={movies} users={users} />} />
                         </Route>
                         <Route path="timeline" element={<TimeLine />} >
-                            <Route index element={<TimeLineIndex logout={logout} csrf_token={csrf_token} user={user} movies={movies} users={users} getMovies={getMovies} hasMore={hasMore} setHasMore={setHasMore} setMovies={setMovies}/>} />
+                            <Route index element={<TimeLineIndex logout={logout} csrf_token={csrf_token} user={user}   hasMore={hasMore} setHasMore={setHasMore} setMovies={setMovies} tagList={tagList}/>} />
                             <Route path=":id" element={<TimelineDetail movies={movies} user={user} csrf_token={csrf_token} />} />
                         </Route>
                         <Route path="practice" element={<Practice logout={logout} csrf_token={csrf_token} post={post} user={user}/>} />

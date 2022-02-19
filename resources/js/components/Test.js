@@ -14,24 +14,18 @@ function Test(props) {
 
     useEffect(() => {
         getIsLiked()
-        getLikesCount()
     }, [])
 
     const getIsLiked = async () => {
         const queries = { user_id: props.user.id, post_id: movie.id};
         const response = await
-            axios.get(`/api/isLiked/${props.movie.id}`, {params: queries})
-        console.log(response.data.bool + 'セット完了');
+            axios.get(`/api/isLiked/${movie.id}`, {params: queries})
         setIsLiked(response.data.bool)
-    }
-
-    const getLikesCount = async () => {
-        const response = await
-            axios.get(`/api/likesCount/${movie.id}`);
         setLikesCount({
             count: response.data.count
         })
-        console.log(response.data);
+        console.log('id=' + `${movie.id}`)
+        console.log(response.data)
     }
 
     const likePost = (id, e) => {
@@ -41,7 +35,6 @@ function Test(props) {
             .then(res => {
                 console.log('successfully liked');
                 getIsLiked();
-                getLikesCount();
             })
     }
 
@@ -52,7 +45,6 @@ function Test(props) {
             .then(res => {
                 console.log('successfully unliked');
                 getIsLiked();
-                getLikesCount();
             }).catch(err => {
             console.log(err)
         })
