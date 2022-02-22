@@ -6,11 +6,13 @@ import Drawer from '@material-ui/core/Drawer';
 import MenuIcon from '@material-ui/icons/Menu';
 import IconButton from '@material-ui/core/IconButton';
 import { makeStyles } from '@material-ui/core/styles';
-import VideoLibraryIcon from '@material-ui/icons/VideoLibrary';
 import VideocamIcon from '@material-ui/icons/Videocam';
 import Tooltip from '@material-ui/core/Tooltip';
 import TimelineIcon from '@material-ui/icons/Timeline';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
+import AccountCircleIcon from '@material-ui/icons/AccountCircle';
+import FavoriteIcon from '@material-ui/icons/Favorite';
+import VideoLibraryIcon from '@material-ui/icons/VideoLibrary';
 
 
 function NavBar(props) {
@@ -66,10 +68,19 @@ function NavBar(props) {
                     <MenuIcon />
                 </IconButton>
                 <Drawer anchor='right' open={open} onClose={toggleOpen}>
-                    <Button component={Link} to="profile">プロフィール</Button>
+                    <IconButton  component={Link} to="profile">
+                        <AccountCircleIcon className={classes.menuButton} />
+                        <Typography className={classes.menuButton}>プロフィール</Typography>
+                    </IconButton>
                     {/*<Button component={Link} to="message">メッセージ</Button>*/}
-                    <Button component={Link} to="myposts">自分の投稿</Button>
-                    <Button component={Link} to="likes">いいねした投稿</Button>
+                    <IconButton component={Link} to="myposts">
+                        <VideoLibraryIcon className={classes.menuButton} />
+                        <Typography className={classes.menuButton}>自分の投稿</Typography>
+                    </IconButton>
+                    <IconButton  component={Link} to="likes">
+                        <FavoriteIcon className={classes.menuButton } />
+                        <Typography className={classes.menuButton}>いいねした投稿</Typography>
+                    </IconButton>
                     <Button component={Link} to="/practice">面接練習する</Button>
                 </Drawer>
             </Toolbar>

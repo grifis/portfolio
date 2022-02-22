@@ -114,7 +114,7 @@ function Practice(props) {
                     <Typography>{questions.question}</Typography>
                     <Button color="primary" variant="contained" onClick={getQuestions}>質問チェンジ</Button>
                     {capturing ? (
-                        <Button color="primary" variant="contained" onClick={handleStopCaptureClick}>ストップ</Button>
+                        <Button color="secondary" variant="contained" onClick={handleStopCaptureClick}>ストップ</Button>
                     ) : (
                         <Button color="primary" variant="contained" onClick={handleStartCaptureClick}>スタート</Button>
                     )}

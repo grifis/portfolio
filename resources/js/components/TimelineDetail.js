@@ -2,9 +2,17 @@ import React, {useEffect, useState} from 'react';
 import {Link, useParams} from 'react-router-dom';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import { IconButton } from "@material-ui/core";
+import {Grid, IconButton} from "@material-ui/core";
 import FavoriteBorderIcon from "@material-ui/icons/FavoriteBorder";
 import FavoriteIcon from "@material-ui/icons/Favorite";
+import {makeStyles} from "@material-ui/core/styles";
+import Box from "@material-ui/core/Box";
+import Typography from "@material-ui/core/Typography";
+import Button from "@material-ui/core/Button";
+import Card from '@material-ui/core/Card';
+import CardActions from '@material-ui/core/CardActions';
+import CardContent from '@material-ui/core/CardContent';
+import FormControl from "@material-ui/core/FormControl";
 
 function TimelineDetail(props) {
     const [postDetail, setPostDetail] = useState({
@@ -92,38 +100,76 @@ function TimelineDetail(props) {
         })
     }
 
+    const useStyles = makeStyles((theme) => ({
+        root: {
+            flexGrow: 1,
+        },
+        video: {
+            marginTop: theme.spacing(5),
+            marginRight: theme.spacing(5),
+        },
+        title: {
+            fontSize: 14,
+        },
+        drawerContainer: {
+            overflow: 'auto',
+        },
+        drawer: {
+            width: 100,
+            flexShrink: 0,
+        },
+    }));
+
+    const classes = useStyles();
+
+
     return (
-        <div>
-            <h1>Timeline詳細ページ</h1>
-            <div>
-                <p>質問文：{postDetail.que}</p>
-                <video src={`${postDetail.path}`} controls width="40%"></video>
-                <p>名前：{postDetail.name}</p>
-                <p>志望業界：{postDetail.tag}</p>
-            </div>
-            <form>
-                <input type='hidden' value={props.csrf_token}/>
-                <input type='submit' onClick={deletePost} value="削除"/>
-            </form>
-            { isLiked.bool ? (
-                <form>
-                    <input type='hidden' value={props.csrf_token}/>
-                    <IconButton type='submit' onClick={unLikePost}>
-                        <FavoriteIcon color={"secondary"}/>
-                    </IconButton>
-                </form>
-            ) : (
-                <form>
-                    <input type='hidden' value={props.csrf_token}/>
-                    <IconButton type='submit' onClick={likePost}>
-                        <FavoriteBorderIcon />
-                    </IconButton>
-                </form>
-            )}
-            <p>いいね数：{likesCount.count}</p>
-            <Link to={'/timeline'}>戻る</Link>
-        </div>
+        <Grid container direction="column">
+            <Grid item container>
+                <Grid item xs={8}>
+                    <Box className={classes.video}>
+                        <video src={`${postDetail.path}`} controls width="100%"></video>
+                    </Box>
+                </Grid>
+                <Grid item xs={4}>
+                        <Card>
+                            <CardContent>
+                                <Typography className={classes.title} color="textSecondary" gutterBottom>名前</Typography>
+                                <Typography variant="h6" component="h2">{postDetail.name}</Typography>
+                                <Typography className={classes.title} color="textSecondary" gutterBottom>志望業界</Typography>
+                                <Typography variant="h6" component="h2">{postDetail.tag}</Typography>
+                                <Typography className={classes.title} color="textSecondary" gutterBottom>質問文</Typography>
+                                <Typography variant="h6" component="h2">{postDetail.que}</Typography>
+                                { isLiked.bool ? (
+                                    <form>
+                                        <input type='hidden' value={props.csrf_token}/>
+                                        <IconButton type='submit' onClick={unLikePost}>
+                                            <FavoriteIcon color={"secondary"}/>
+                                            <Typography>{likesCount.count}</Typography>
+                                        </IconButton>
+                                    </form>
+                                ) : (
+                                    <form>
+                                        <input type='hidden' value={props.csrf_token}/>
+                                        <IconButton type='submit' onClick={likePost}>
+                                            <FavoriteBorderIcon />
+                                            <Typography>{likesCount.count}</Typography>
+                                        </IconButton>
+                                    </form>
+                                )}
+                            </CardContent>
+                            <CardContent>
+                                <Button variant="contained" color="primary" component={Link} to={'/timeline'}>戻る</Button>
+                                <FormControl>
+                                    <input type='hidden' value={props.csrf_token}/>
+                                    <Button color="secondary" variant="contained" type='submit' onClick={deletePost}>削除</Button>
+                                </FormControl>
+                            </CardContent>
+                        </Card>
+                </Grid>
+            </Grid>
+        </Grid>
     );
-};
+}
 
 export default TimelineDetail;

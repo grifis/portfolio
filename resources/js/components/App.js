@@ -68,18 +68,7 @@ function App() {
 
 
 
-    const getLikePosts = async(page) => {
-        const queries = {id: user.id};
-        const response = await axios.get(`/api/likePosts?page=${page}`, {params: queries})
-        if (response.data.posts.data.length < 1) {
-            setHasMoreLikePost(false);
-            console.log('no posts')
-            return;
-        }
-        console.log(likePosts)
-        console.log(response.data.posts.data)
-        setLikePosts([...likePosts, ...response.data.posts.data])
-    }
+
 
     return (
         <Router>
@@ -94,7 +83,7 @@ function App() {
                         <Route path="profile" element={<Profile logout={logout} csrf_token={csrf_token} user={user}/>} />
                         <Route path="message" element={<Message logout={logout} csrf_token={csrf_token} user={user}/>} />
                         <Route path="likes" element={<Likes />}>
-                            <Route index element={<LikesIndex logout={logout} csrf_token={csrf_token} user={user}  likePosts={likePosts} getLikePosts={getLikePosts} hasMoreLikePost={hasMoreLikePost} setLikePosts={setLikePosts} setHasMoreLikePost={setHasMoreLikePost}/>} />
+                            <Route index element={<LikesIndex logout={logout} csrf_token={csrf_token} user={user}  likePosts={likePosts} hasMoreLikePost={hasMoreLikePost} setLikePosts={setLikePosts} setHasMoreLikePost={setHasMoreLikePost}/>} />
                             <Route path=":id" element={<LikesDetail movies={movies} users={users} />} />
                         </Route>
                         <Route path="myposts" element={<MyPosts logout={logout} csrf_token={csrf_token} user={user}/>} >

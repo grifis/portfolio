@@ -12,27 +12,42 @@ import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 import SearchIcon from '@material-ui/icons/Search';
 import InfiniteScroll  from "react-infinite-scroller";
+import Test from "../Test";
 
 function LikesIndex(props) {
     const likePosts = props.likePosts
-    const getLikePosts = props.getLikePosts
     const windowWidth = window.outerWidth;
     const drawerWidth = windowWidth/4;
     const [tag, setTag] = React.useState('');
     const [word, setWord] = React.useState('');
 
     useEffect(() => {
-        reset();
-        console.log('get MyPosts');
+        getLikeFirst(1)
     }, []);
 
-    {/*const getLikePosts = async() => {
+    const getLikePosts = async(page) => {
         const queries = {id: props.user.id};
-        const response = await axios.get('/api/likePosts', {params: queries})
-        setLikePosts(response.data.posts)
-        console.log('setMyPosts completed');
-        console.log(response.data);
-    }*/}
+        const response = await axios.get(`/api/likePosts?page=${page}`, {params: queries})
+        if (response.data.posts.data.length < 1) {
+            props.setHasMoreLikePost(false);
+            console.log('no posts')
+            return;
+        }
+        console.log(response.data.posts.data);
+        props.setLikePosts([...likePosts, ...response.data.posts.data])
+    }
+
+    const getLikeFirst = async(page) => {
+        const queries = {id: props.user.id};
+        const response = await axios.get(`/api/likePosts?page=${page}`, {params: queries})
+        if (response.data.posts.data.length < 1) {
+            props.setHasMoreLikePost(false);
+            console.log('no posts')
+            return;
+        }
+        console.log(response.data.posts.data)
+        props.setLikePosts([...response.data.posts.data])
+    }
 
     const tagChange = (event) => {
         setTag(event.target.value);
@@ -156,6 +171,7 @@ function LikesIndex(props) {
                         </CardActions>
                         <CardActions>
                             <Button variant="contained" color="primary" component={Link} to={`/likes/${likePost.id}`}>詳細</Button>
+                            <Test user={props.user} movie={likePost}/>
                         </CardActions>
                     </CardContent>
                 </Card>
@@ -174,6 +190,8 @@ function LikesIndex(props) {
                     <div>
                         <Typography>いいねした投稿</Typography>
                         <InfiniteScroll
+                            pageStart={1}
+                            initialLoad={false}
                             loadMore={getLikePosts}    //項目を読み込む際に処理するコールバック関数
                             hasMore={props.hasMoreLikePost}         //読み込みを行うかどうかの判定
                             loader={loader}>      {/* 読み込み最中に表示する項目 */}

@@ -30,25 +30,34 @@ function TimeLineIndex(props) {
 
 
     useEffect(() => {
-        getMovies(1)
+        getMoviesFirst(1)
         return () => {
             reset()
         }
-    }, [tag])
+    }, [tag, word])
 
     const getMovies = async(page) => {
-        const queries = {tag_id: tag};
+        const queries = {tag_id: tag, word: word};
         const response = await axios.get(`/api/movie?page=${page}`, {params: queries})
         if (response.data.movie.data.length < 1) {
             props.setHasMore(false);
             console.log('no posts')
         }
-        console.log(tag);
-        console.log(page);
-        console.log(movies);
         console.log(response.data.movie.data);
         console.log(response.data)
         setMovies([...movies, ...response.data.movie.data])
+    }
+
+    const getMoviesFirst = async(page) => {
+        const queries = {tag_id: tag, word: word};
+        const response = await axios.get(`/api/movie?page=${page}`, {params: queries})
+        if (response.data.movie.data.length < 1) {
+            props.setHasMore(false);
+            console.log('no posts')
+        }
+        console.log(response.data.movie.data);
+        console.log(response.data)
+        setMovies([...response.data.movie.data])
     }
 
     const reset = () => {
@@ -212,6 +221,7 @@ function TimeLineIndex(props) {
                                     value={tag}
                                     onChange={tagChange}
                                 >
+                                    <MenuItem　value={null}>全業界</MenuItem>
                                     {props.tagList.map((tag) =>
                                         <MenuItem value={tag.id} key={tag.id}>{tag.tag}</MenuItem>
                                     )}

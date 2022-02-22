@@ -128,12 +128,28 @@ class PostsController extends Controller
     {
         $movie = Post::with('question', 'user', 'tag' ,'likes')->latest()->paginate(4);
         $tag_id = $request->input('tag_id');
+        $word = $request->input('word');
         if ($tag_id) {
-            $movie = Post::with('question', 'user', 'tag' ,'likes')->whereHas('tag', function($q) use($tag_id){
-                $q->where('id', $tag_id);
+            if ($word) {
+                $movie = Post::with('question', 'user', 'tag' ,'likes')->
+                whereHas('tag', function($q) use($tag_id){
+                    $q->where('id', $tag_id);
+                })->
+                whereHas('question', function($q) use($word){
+                    $q->where('question', 'like', "%$word%");
+                })->latest()->paginate(4);
+            } else {
+                $movie = Post::with('question', 'user', 'tag' ,'likes')->whereHas('tag', function($q) use($tag_id){
+                    $q->where('id', $tag_id);
+                })->latest()->paginate(4);
+            }
+
+        } elseif ($word) {
+            $movie = Post::with('question', 'user', 'tag' ,'likes')->whereHas('question', function($q) use($word){
+                $q->where('question', 'like', "%$word%");
             })->latest()->paginate(4);
         }
-        return response()->json(['movie' => $movie, 'tag_id' => $tag_id]);
+        return response()->json(['movie' => $movie]);
     }
 
     public function likePosts(Request $request)
