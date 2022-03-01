@@ -20,6 +20,7 @@ class CreateUsersTable extends Migration
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->integer('tag_id')->unsigned();
+            $table->string('text', 200)->default('よろしくお願いします！')->nullable();
             $table->rememberToken();
             $table->timestamps();
         });

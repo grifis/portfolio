@@ -86,6 +86,7 @@ function LikesIndex(props) {
         menuButton: {
             marginTop: theme.spacing(2),
             marginBottom: theme.spacing(2),
+            marginLeft: theme.spacing(5),
         },
         title: {
             flexGrow: 1,

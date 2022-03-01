@@ -8,6 +8,10 @@ import Button from '@material-ui/core/Button';
 import { Grid } from '@material-ui/core';
 import Typography from '@material-ui/core/Typography';
 import {alpha, makeStyles} from "@material-ui/core/styles";
+import Card from '@material-ui/core/Card';
+import CardActions from '@material-ui/core/CardActions';
+import CardContent from '@material-ui/core/CardContent';
+import FormControl from "@material-ui/core/FormControl";
 
 
 const WebcamComponent = () => <Webcam />;
@@ -97,6 +101,17 @@ function Practice(props) {
         video: {
             marginTop: theme.spacing(2),
             marginRight: theme.spacing(5),
+            marginLeft: theme.spacing(5),
+        },
+        box: {
+            marginTop: theme.spacing(2),
+            marginRight: theme.spacing(5),
+        },
+        buttonBox: {
+            marginTop: theme.spacing(2),
+        },
+        button: {
+            marginRight: theme.spacing(3),
         },
     }));
 
@@ -111,19 +126,29 @@ function Practice(props) {
                     </Box>
                 </Grid>
                 <Grid item xs={3}>
-                    <Typography>{questions.question}</Typography>
-                    <Button color="primary" variant="contained" onClick={getQuestions}>質問チェンジ</Button>
-                    {capturing ? (
-                        <Button color="secondary" variant="contained" onClick={handleStopCaptureClick}>ストップ</Button>
-                    ) : (
-                        <Button color="primary" variant="contained" onClick={handleStartCaptureClick}>スタート</Button>
-                    )}
-                    {recordedChunks.length > 0 && (
-                        <form>
-                            <input type='hidden' value={props.csrf_token}/>
-                            <Button　color="primary" variant="contained" type='submit' onClick={handleDownload} value="アップロード">アップロード</Button>
-                        </form>
-                    )}
+                    <Box className={classes.box}>
+                        <Card>
+                            <CardContent>
+                                <Typography>{questions.question}</Typography>
+                            </CardContent>
+                            <CardContent alignItems="center" justify="center">
+                                <Button color="primary" variant="contained" onClick={getQuestions}>質問チェンジ</Button>
+                            </CardContent>
+                        </Card>
+                        <Box className={classes.buttonBox}>
+                            {capturing ? (
+                                <Button color="secondary" variant="contained" onClick={handleStopCaptureClick} className={classes.button}>停止</Button>
+                            ) : (
+                                <Button color="primary" variant="contained" onClick={handleStartCaptureClick} className={classes.button}>開始</Button>
+                            )}
+                            {recordedChunks.length > 0 && (
+                                <FormControl>
+                                    <input type='hidden' value={props.csrf_token}/>
+                                    <Button　color="primary" variant="contained" type='submit' onClick={handleDownload} className={classes.button}>投稿</Button>
+                                </FormControl>
+                            )}
+                        </Box>
+                    </Box>
                 </Grid>
             </Grid>
         </Grid>

@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import Test from './Test';
-import { Link } from "react-router-dom";
+import { Link as RouterLink } from "react-router-dom";
 import Button from '@material-ui/core/Button';
 import Card from '@material-ui/core/Card';
 import CardActions from '@material-ui/core/CardActions';
@@ -12,12 +12,9 @@ import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 import SearchIcon from '@material-ui/icons/Search';
 import InfiniteScroll  from "react-infinite-scroller";
-import { IconButton } from "@material-ui/core";
-import FavoriteBorderIcon from "@material-ui/icons/FavoriteBorder";
-import FavoriteIcon from "@material-ui/icons/Favorite";
 import axios from "axios";
-
-
+import Link from '@material-ui/core/Link';
+import Box from "@material-ui/core/Box";
 
 function TimeLineIndex(props) {
 
@@ -27,10 +24,12 @@ function TimeLineIndex(props) {
     const [word, setWord] = React.useState('');
     const [tagList, setTagList] = React.useState([]);
     const [movies, setMovies] = useState([]);
+    const [ranks, setRanks] = useState([]);
 
 
     useEffect(() => {
         getMoviesFirst(1)
+        getRank()
         return () => {
             reset()
         }
@@ -60,8 +59,16 @@ function TimeLineIndex(props) {
         setMovies([...response.data.movie.data])
     }
 
+    const getRank = async() => {
+        const queries = {tag_id: tag, word: word};
+        const response = await axios.get(`/api/rank`, {params: queries})
+
+        console.log(response.data.rank);
+        setRanks([...response.data.rank])
+    }
+
     const reset = () => {
-        setMovies([]);
+        props.setHasMore(true);
         console.log('リセットされたよ');
     }
 
@@ -97,6 +104,7 @@ function TimeLineIndex(props) {
         menuButton: {
             marginTop: theme.spacing(2),
             marginBottom: theme.spacing(2),
+            marginLeft: theme.spacing(5),
         },
         title: {
             flexGrow: 1,
@@ -156,17 +164,16 @@ function TimeLineIndex(props) {
             alignItems: 'center',
             justifyContent: 'center',
         },
+        ranking: {
+            margin: theme.spacing(3),
+        },
+        rankTitle: {
+            marginTop: theme.spacing(2),
+            marginLeft: theme.spacing(2),
+        },
     }));
 
     const classes = useStyles();
-
-    //表示するデータ
-    const [list, setList] = useState([])
-
-    //項目を読み込むときのコールバック
-    const loadMore = (page) => {
-        setList([...list, page])
-    }
 
     //各スクロール要素
     const items = (
@@ -174,14 +181,19 @@ function TimeLineIndex(props) {
             {movies.map((movie) =>
                 <Card variant="outlined" key={movie.id} className={classes.menuButton}>
                     <CardContent>
-                        <Typography color="textSecondary">ユーザー名:{movie.user.name}</Typography>
+                        <Typography color="textSecondary">
+                            ユーザー名:
+                            <Link color="textSecondary" component={RouterLink} to={`/profile/${movie.user.id}`} >
+                                {movie.user.name}
+                            </Link>
+                        </Typography>
                         <Typography color="textSecondary">質問文:{movie.question.question}</Typography>
                         <Typography color="textSecondary">志望業界:{movie.tag.tag}</Typography>
                         <CardActions>
                             <video src={`${movie.video_path}`} controls width="75%"/>
                         </CardActions>
                         <CardActions>
-                            <Button variant="contained" color="primary" component={Link} to={`/timeline/${movie.id}`}>詳細</Button>
+                            <Button variant="contained" color="primary" component={RouterLink} to={`/timeline/${movie.id}`}>詳細</Button>
                             <Test user={props.user} movie={movie}/>
                         </CardActions>
                     </CardContent>
@@ -241,6 +253,20 @@ function TimeLineIndex(props) {
                                     type="text"
                                     onChange={wordChange}
                                 />
+                            </div>
+                            <div>
+                                <Typography className={classes.rankTitle}>〜いいね数ランキング〜</Typography>
+                                {ranks.map((rank, index) =>
+                                    <Card key={rank.id} variant="outlined" className={classes.ranking}>
+                                        <CardContent>
+                                            <Typography>第{index+1}位</Typography>
+                                            <Typography>いいね数：{rank.likes_count}</Typography>
+                                            <Typography>ユーザー名：{rank.user.name}</Typography>
+                                            <video src={`${rank.video_path}`} controls width="75%"/>
+                                            <Button variant="contained" color="primary" component={RouterLink} to={`/timeline/${rank.id}`}>詳細</Button>
+                                        </CardContent>
+                                    </Card>
+                                )}
                             </div>
                         </div>
                     </Drawer>

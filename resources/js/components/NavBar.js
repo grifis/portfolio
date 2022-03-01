@@ -68,7 +68,7 @@ function NavBar(props) {
                     <MenuIcon />
                 </IconButton>
                 <Drawer anchor='right' open={open} onClose={toggleOpen}>
-                    <IconButton  component={Link} to="profile">
+                    <IconButton  component={Link} to={`profile/${props.user.id}`}>
                         <AccountCircleIcon className={classes.menuButton} />
                         <Typography className={classes.menuButton}>プロフィール</Typography>
                     </IconButton>
@@ -81,7 +81,10 @@ function NavBar(props) {
                         <FavoriteIcon className={classes.menuButton } />
                         <Typography className={classes.menuButton}>いいねした投稿</Typography>
                     </IconButton>
-                    <Button component={Link} to="/practice">面接練習する</Button>
+                    <IconButton  component={Link} to="practice">
+                        <VideocamIcon className={classes.menuButton } />
+                        <Typography className={classes.menuButton}>面接練習する</Typography>
+                    </IconButton>
                 </Drawer>
             </Toolbar>
         </AppBar>

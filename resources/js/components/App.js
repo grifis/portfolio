@@ -16,6 +16,8 @@ import {BrowserRouter as Router, Routes, Route} from 'react-router-dom';
 import axios from "axios";
 import TimeLineIndex from "./TimelineIndex";
 import { Grid } from '@material-ui/core';
+import UserProfile from "./UserProfile";
+import EditProfile from "./EditProfile";
 
 
 function App() {
@@ -77,27 +79,30 @@ function App() {
                     <NavBar logout={logout} csrf_token={csrf_token} user={user}/>
                 </Grid>
                 <Grid item container>
-                    <Grid item sm={1} />
-                    <Grid item xs={12} sm={10}>
+                    <Grid item />
+                    <Grid item xs={12} sm={12}>
                     <Routes>
-                        <Route path="profile" element={<Profile logout={logout} csrf_token={csrf_token} user={user}/>} />
-                        <Route path="message" element={<Message logout={logout} csrf_token={csrf_token} user={user}/>} />
+                        <Route path="profile" element={<Profile csrf_token={csrf_token} user={user}/>} >
+                            <Route path=":id" element={<UserProfile user={user} csrf_token={csrf_token}/>} />
+                            <Route path=":id/edit" element={<EditProfile user={user} csrf_token={csrf_token} tagList={tagList}/>} />
+                        </Route>
+                        <Route path="message" element={<Message csrf_token={csrf_token} user={user}/>} />
                         <Route path="likes" element={<Likes />}>
-                            <Route index element={<LikesIndex logout={logout} csrf_token={csrf_token} user={user}  likePosts={likePosts} hasMoreLikePost={hasMoreLikePost} setLikePosts={setLikePosts} setHasMoreLikePost={setHasMoreLikePost}/>} />
+                            <Route index element={<LikesIndex csrf_token={csrf_token} user={user}  likePosts={likePosts} hasMoreLikePost={hasMoreLikePost} setLikePosts={setLikePosts} setHasMoreLikePost={setHasMoreLikePost}/>} />
                             <Route path=":id" element={<LikesDetail movies={movies} users={users} />} />
                         </Route>
-                        <Route path="myposts" element={<MyPosts logout={logout} csrf_token={csrf_token} user={user}/>} >
-                            <Route index element={<MyPostsIndex logout={logout} csrf_token={csrf_token} user={user} movies={movies} users={users} />} />
+                        <Route path="myposts" element={<MyPosts csrf_token={csrf_token} user={user}/>} >
+                            <Route index element={<MyPostsIndex csrf_token={csrf_token} user={user} movies={movies} users={users} hasMore={hasMore} setHasMore={setHasMore}/>} />
                             <Route path=":id" element={<MyPostsDetail movies={movies} users={users} />} />
                         </Route>
                         <Route path="timeline" element={<TimeLine />} >
-                            <Route index element={<TimeLineIndex logout={logout} csrf_token={csrf_token} user={user}   hasMore={hasMore} setHasMore={setHasMore} setMovies={setMovies} tagList={tagList}/>} />
+                            <Route index element={<TimeLineIndex csrf_token={csrf_token} user={user} hasMore={hasMore} setHasMore={setHasMore} tagList={tagList}/>} />
                             <Route path=":id" element={<TimelineDetail movies={movies} user={user} csrf_token={csrf_token} />} />
                         </Route>
-                        <Route path="practice" element={<Practice logout={logout} csrf_token={csrf_token} post={post} user={user}/>} />
+                        <Route path="practice" element={<Practice csrf_token={csrf_token} post={post} user={user}/>} />
                     </Routes>
                     </Grid>
-                    <Grid item sm={1} />
+                    <Grid item />
                 </Grid>
             </Grid>
         </Router>

@@ -42,11 +42,7 @@ Route::get('/movie', function(Request $request) {
 
 Route::get('/movie', 'App\Http\Controllers\PostsController@movie');
 
-Route::get('myposts', function(Request $request) {
-    $id = $request->input("id");
-    $myposts = App\Models\Post::with('question', 'user')->where('user_id', $id)->get();
-    return response()->json(['myposts' => $myposts]);
-});
+Route::get('/myPosts', 'App\Http\Controllers\PostsController@myPost');
 
 Route::get('/likePosts', 'App\Http\Controllers\PostsController@likePosts');
 
@@ -65,6 +61,12 @@ Route::get('/isLiked/{id}', 'App\Http\Controllers\PostsController@isLiked');
 Route::get('/likesCount/{id}', 'App\Http\Controllers\PostsController@likesCount');
 
 Route::get('/tag', 'App\Http\Controllers\PostsController@tag');
+
+Route::get('/rank', 'App\Http\Controllers\PostsController@rank');
+
+Route::get('/profile/{profile}', 'App\Http\Controllers\PostsController@profile');
+
+Route::put('/profile/modify/{user}', 'App\Http\Controllers\PostsController@modifyProfile');
 
 Route::post('/like/{id}', 'App\Http\Controllers\PostsController@like');
 

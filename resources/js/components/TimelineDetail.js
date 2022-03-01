@@ -107,6 +107,7 @@ function TimelineDetail(props) {
         video: {
             marginTop: theme.spacing(5),
             marginRight: theme.spacing(5),
+            marginLeft: theme.spacing(5),
         },
         title: {
             fontSize: 14,
@@ -117,6 +118,12 @@ function TimelineDetail(props) {
         drawer: {
             width: 100,
             flexShrink: 0,
+        },
+        card: {
+            marginTop: theme.spacing(5),
+        },
+        button: {
+            marginRight: theme.spacing(3),
         },
     }));
 
@@ -132,7 +139,7 @@ function TimelineDetail(props) {
                     </Box>
                 </Grid>
                 <Grid item xs={4}>
-                        <Card>
+                        <Card className={classes.video}>
                             <CardContent>
                                 <Typography className={classes.title} color="textSecondary" gutterBottom>名前</Typography>
                                 <Typography variant="h6" component="h2">{postDetail.name}</Typography>
@@ -159,10 +166,10 @@ function TimelineDetail(props) {
                                 )}
                             </CardContent>
                             <CardContent>
-                                <Button variant="contained" color="primary" component={Link} to={'/timeline'}>戻る</Button>
+                                <Button variant="contained" color="primary" component={Link} to={'/timeline'} className={classes.button}>戻る</Button>
                                 <FormControl>
                                     <input type='hidden' value={props.csrf_token}/>
-                                    <Button color="secondary" variant="contained" type='submit' onClick={deletePost}>削除</Button>
+                                    <Button color="secondary" variant="contained" type='submit' onClick={deletePost} className={classes.button}>削除</Button>
                                 </FormControl>
                             </CardContent>
                         </Card>

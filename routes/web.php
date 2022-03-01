@@ -44,7 +44,12 @@ Route::get('/myposts', function () {
     return view('app', compact('user'));
 })->middleware('auth');
 
-Route::get('/profile', function () {
+Route::get('/profile/{id}', function () {
+    $user = json_encode(Auth::user());
+    return view('app', compact('user'));
+})->middleware('auth');
+
+Route::get('/profile/{id}/edit', function () {
     $user = json_encode(Auth::user());
     return view('app', compact('user'));
 })->middleware('auth');

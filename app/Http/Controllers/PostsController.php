@@ -152,6 +152,13 @@ class PostsController extends Controller
         return response()->json(['movie' => $movie]);
     }
 
+    public function myPost(Request $request)
+    {
+        $id = $request->input("id");
+        $myposts = Post::with('question', 'user', 'tag', 'likes')->where('user_id', $id)->latest()->paginate(4);
+        return response()->json(['myposts' => $myposts]);
+    }
+
     public function likePosts(Request $request)
     {
         $userId = $request->input('id');
@@ -165,5 +172,29 @@ class PostsController extends Controller
     {
         $tag = Tag::all();
         return response()->json(['tag' => $tag]);
+    }
+
+    public function rank(Request $request)
+    {
+        $rank = Post::withCount('likes')->orderBy('likes_count', 'desc')->with('question', 'user', 'tag')->take(5)->get();
+        return response()->json(['rank' => $rank]);
+    }
+
+    public function profile($profile)
+    {
+        $profile = User::where('id', $profile)->with('tag')->first();
+        return response()->json(['profile' => $profile]);
+    }
+
+    public function modifyProfile(Request $request, User $user)
+    {
+        $name = $request->input('name');
+        $text = $request->input('text');
+        $tagId = $request->input('tagId');
+
+        $user->name = $name;
+        $user->text = $text;
+        $user->tag_id = $tagId;
+        $user->save();
     }
 }
