@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from "react-router-dom";
+import {Link as RouterLink, Link} from "react-router-dom";
 import axios from "axios";
 import Button from '@material-ui/core/Button';
 import Card from '@material-ui/core/Card';
@@ -20,9 +20,14 @@ function LikesIndex(props) {
     const drawerWidth = windowWidth/4;
     const [tag, setTag] = React.useState('');
     const [word, setWord] = React.useState('');
+    const [ranks, setRanks] = useState([]);
 
     useEffect(() => {
         getLikeFirst(1)
+        getLikePostRank()
+        return () => {
+            reset()
+        }
     }, []);
 
     const getLikePosts = async(page) => {
@@ -49,6 +54,14 @@ function LikesIndex(props) {
         props.setLikePosts([...response.data.posts.data])
     }
 
+    const getLikePostRank = async() => {
+        const queries = {tag_id: tag, word: word, id: props.user.id};
+        const response = await axios.get(`/api/likePostRank`, {params: queries})
+
+        console.log(response.data.rank);
+        setRanks([...response.data.rank])
+    }
+
     const tagChange = (event) => {
         setTag(event.target.value);
         console.log(event.target.value)
@@ -73,7 +86,6 @@ function LikesIndex(props) {
     }
 
     const reset = () => {
-        props.setLikePosts([]);
         console.log('リセットされたよ');
         props.setHasMoreLikePost(true);
     }
@@ -146,6 +158,13 @@ function LikesIndex(props) {
             alignItems: 'center',
             justifyContent: 'center',
         },
+        ranking: {
+            margin: theme.spacing(3),
+        },
+        rankTitle: {
+            marginTop: theme.spacing(2),
+            marginLeft: theme.spacing(2),
+        },
     }));
 
     const classes = useStyles();
@@ -179,10 +198,8 @@ function LikesIndex(props) {
             )}
         </div>);
 
-
     //ロード中に表示する項目
     const loader =<div className="loader" key={0}>Loading ...</div>;
-
 
     return (
         <div>
@@ -212,9 +229,10 @@ function LikesIndex(props) {
                                     value={tag}
                                     onChange={tagChange}
                                 >
-                                    <MenuItem value={1}>Ten</MenuItem>
-                                    <MenuItem value={2}>Twenty</MenuItem>
-                                    <MenuItem value={3}>Thirty</MenuItem>
+                                    <MenuItem　value={null}>全業界</MenuItem>
+                                    {props.tagList.map((tag) =>
+                                        <MenuItem value={tag.id} key={tag.id}>{tag.tag}</MenuItem>
+                                    )}
                                 </Select>
                             </FormControl>
                             <div className={classes.search}>
@@ -231,6 +249,20 @@ function LikesIndex(props) {
                                     type="text"
                                     onChange={wordChange}
                                 />
+                            </div>
+                            <div>
+                                <Typography className={classes.rankTitle}>〜いいね数ランキング〜</Typography>
+                                {ranks.map((rank, index) =>
+                                    <Card key={rank.id} variant="outlined" className={classes.ranking}>
+                                        <CardContent>
+                                            <Typography>第{index+1}位</Typography>
+                                            <Typography>いいね数：{rank.likes_count}</Typography>
+                                            <Typography>ユーザー名：{rank.user.name}</Typography>
+                                            <video src={`${rank.video_path}`} controls width="75%"/>
+                                            <Button variant="contained" color="primary" component={RouterLink} to={`/timeline/${rank.id}`}>詳細</Button>
+                                        </CardContent>
+                                    </Card>
+                                )}
                             </div>
                         </div>
                     </Drawer>

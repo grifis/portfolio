@@ -180,6 +180,22 @@ class PostsController extends Controller
         return response()->json(['rank' => $rank]);
     }
 
+    public function likePostRank(Request $request)
+    {
+        $id = $request->input("id");
+        $rank = Post::whereHas('likes', function($q) use($id){
+            $q->where('user_id', $id);
+        })->withCount('likes')->orderBy('likes_count', 'desc')->with('question', 'user', 'tag')->take(5)->get();
+        return response()->json(['rank' => $rank]);
+    }
+
+    public function myPostRank(Request $request)
+    {
+        $id = $request->input("id");
+        $rank = Post::where('user_id', $id)->with('question', 'user', 'tag', 'likes')->withCount('likes')->orderBy('likes_count', 'desc')->take(5)->get();
+        return response()->json(['rank' => $rank]);
+    }
+
     public function profile($profile)
     {
         $profile = User::where('id', $profile)->with('tag')->first();

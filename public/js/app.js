@@ -24552,7 +24552,8 @@ function App() {
                   likePosts: likePosts,
                   hasMoreLikePost: hasMoreLikePost,
                   setLikePosts: setLikePosts,
-                  setHasMoreLikePost: setHasMoreLikePost
+                  setHasMoreLikePost: setHasMoreLikePost,
+                  tagList: tagList
                 })
               }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_19__.jsx)(react_router_dom__WEBPACK_IMPORTED_MODULE_22__.Route, {
                 path: ":id",
@@ -24575,7 +24576,8 @@ function App() {
                   movies: movies,
                   users: users,
                   hasMore: hasMore,
-                  setHasMore: setHasMore
+                  setHasMore: setHasMore,
+                  tagList: tagList
                 })
               }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_19__.jsx)(react_router_dom__WEBPACK_IMPORTED_MODULE_22__.Route, {
                 path: ":id",
@@ -26078,11 +26080,6 @@ function TimeLineIndex(props) {
       word = _React$useState4[0],
       setWord = _React$useState4[1];
 
-  var _React$useState5 = react__WEBPACK_IMPORTED_MODULE_1__.useState([]),
-      _React$useState6 = _slicedToArray(_React$useState5, 2),
-      tagList = _React$useState6[0],
-      setTagList = _React$useState6[1];
-
   var _useState = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)([]),
       _useState2 = _slicedToArray(_useState, 2),
       movies = _useState2[0],
@@ -26927,8 +26924,17 @@ function LikesIndex(props) {
       word = _React$useState4[0],
       setWord = _React$useState4[1];
 
+  var _useState = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)([]),
+      _useState2 = _slicedToArray(_useState, 2),
+      ranks = _useState2[0],
+      setRanks = _useState2[1];
+
   (0,react__WEBPACK_IMPORTED_MODULE_1__.useEffect)(function () {
     getLikeFirst(1);
+    getLikePostRank();
+    return function () {
+      reset();
+    };
   }, []);
 
   var getLikePosts = /*#__PURE__*/function () {
@@ -27019,6 +27025,41 @@ function LikesIndex(props) {
     };
   }();
 
+  var getLikePostRank = /*#__PURE__*/function () {
+    var _ref3 = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee3() {
+      var queries, response;
+      return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee3$(_context3) {
+        while (1) {
+          switch (_context3.prev = _context3.next) {
+            case 0:
+              queries = {
+                tag_id: tag,
+                word: word,
+                id: props.user.id
+              };
+              _context3.next = 3;
+              return axios__WEBPACK_IMPORTED_MODULE_2___default().get("/api/likePostRank", {
+                params: queries
+              });
+
+            case 3:
+              response = _context3.sent;
+              console.log(response.data.rank);
+              setRanks(_toConsumableArray(response.data.rank));
+
+            case 6:
+            case "end":
+              return _context3.stop();
+          }
+        }
+      }, _callee3);
+    }));
+
+    return function getLikePostRank() {
+      return _ref3.apply(this, arguments);
+    };
+  }();
+
   var tagChange = function tagChange(event) {
     setTag(event.target.value);
     console.log(event.target.value);
@@ -27043,7 +27084,6 @@ function LikesIndex(props) {
   };
 
   var reset = function reset() {
-    props.setLikePosts([]);
     console.log('リセットされたよ');
     props.setHasMoreLikePost(true);
   };
@@ -27113,15 +27153,22 @@ function LikesIndex(props) {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center'
+      },
+      ranking: {
+        margin: theme.spacing(3)
+      },
+      rankTitle: {
+        marginTop: theme.spacing(2),
+        marginLeft: theme.spacing(2)
       }
     };
   });
   var classes = useStyles(); //表示するデータ
 
-  var _useState = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)([]),
-      _useState2 = _slicedToArray(_useState, 2),
-      list = _useState2[0],
-      setList = _useState2[1]; //項目を読み込むときのコールバック
+  var _useState3 = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)([]),
+      _useState4 = _slicedToArray(_useState3, 2),
+      list = _useState4[0],
+      setList = _useState4[1]; //項目を読み込むときのコールバック
 
 
   var loadMore = function loadMore(page) {
@@ -27218,14 +27265,13 @@ function LikesIndex(props) {
                 value: tag,
                 onChange: tagChange,
                 children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)(_material_ui_core__WEBPACK_IMPORTED_MODULE_20__["default"], {
-                  value: 1,
-                  children: "Ten"
-                }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)(_material_ui_core__WEBPACK_IMPORTED_MODULE_20__["default"], {
-                  value: 2,
-                  children: "Twenty"
-                }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)(_material_ui_core__WEBPACK_IMPORTED_MODULE_20__["default"], {
-                  value: 3,
-                  children: "Thirty"
+                  value: null,
+                  children: "\u5168\u696D\u754C"
+                }), props.tagList.map(function (tag) {
+                  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)(_material_ui_core__WEBPACK_IMPORTED_MODULE_20__["default"], {
+                    value: tag.id,
+                    children: tag.tag
+                  }, tag.id);
                 })]
               })]
             }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxs)("div", {
@@ -27244,6 +27290,35 @@ function LikesIndex(props) {
                 },
                 type: "text",
                 onChange: wordChange
+              })]
+            }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxs)("div", {
+              children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)(_material_ui_core_Typography__WEBPACK_IMPORTED_MODULE_10__["default"], {
+                className: classes.rankTitle,
+                children: "\u301C\u3044\u3044\u306D\u6570\u30E9\u30F3\u30AD\u30F3\u30B0\u301C"
+              }), ranks.map(function (rank, index) {
+                return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)(_material_ui_core_Card__WEBPACK_IMPORTED_MODULE_8__["default"], {
+                  variant: "outlined",
+                  className: classes.ranking,
+                  children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxs)(_material_ui_core_CardContent__WEBPACK_IMPORTED_MODULE_9__["default"], {
+                    children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxs)(_material_ui_core_Typography__WEBPACK_IMPORTED_MODULE_10__["default"], {
+                      children: ["\u7B2C", index + 1, "\u4F4D"]
+                    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxs)(_material_ui_core_Typography__WEBPACK_IMPORTED_MODULE_10__["default"], {
+                      children: ["\u3044\u3044\u306D\u6570\uFF1A", rank.likes_count]
+                    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxs)(_material_ui_core_Typography__WEBPACK_IMPORTED_MODULE_10__["default"], {
+                      children: ["\u30E6\u30FC\u30B6\u30FC\u540D\uFF1A", rank.user.name]
+                    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)("video", {
+                      src: "".concat(rank.video_path),
+                      controls: true,
+                      width: "75%"
+                    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)(_material_ui_core_Button__WEBPACK_IMPORTED_MODULE_12__["default"], {
+                      variant: "contained",
+                      color: "primary",
+                      component: react_router_dom__WEBPACK_IMPORTED_MODULE_13__.Link,
+                      to: "/timeline/".concat(rank.id),
+                      children: "\u8A73\u7D30"
+                    })]
+                  })
+                }, rank.id);
               })]
             })]
           })]
@@ -27449,8 +27524,15 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _material_ui_core_Typography__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! @material-ui/core/Typography */ "./node_modules/@material-ui/core/esm/Typography/Typography.js");
 /* harmony import */ var _material_ui_core__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! @material-ui/core */ "./node_modules/@material-ui/core/esm/Grid/Grid.js");
 /* harmony import */ var _material_ui_core__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! @material-ui/core */ "./node_modules/@material-ui/core/esm/Drawer/Drawer.js");
+/* harmony import */ var _material_ui_core__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! @material-ui/core */ "./node_modules/@material-ui/core/esm/Toolbar/Toolbar.js");
+/* harmony import */ var _material_ui_core__WEBPACK_IMPORTED_MODULE_19__ = __webpack_require__(/*! @material-ui/core */ "./node_modules/@material-ui/core/esm/InputLabel/InputLabel.js");
+/* harmony import */ var _material_ui_core__WEBPACK_IMPORTED_MODULE_21__ = __webpack_require__(/*! @material-ui/core */ "./node_modules/@material-ui/core/esm/MenuItem/MenuItem.js");
+/* harmony import */ var _material_ui_core__WEBPACK_IMPORTED_MODULE_23__ = __webpack_require__(/*! @material-ui/core */ "./node_modules/@material-ui/core/esm/InputBase/InputBase.js");
 /* harmony import */ var _material_ui_core_styles__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @material-ui/core/styles */ "./node_modules/@material-ui/core/esm/styles/makeStyles.js");
 /* harmony import */ var _material_ui_core_styles__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @material-ui/core/styles */ "./node_modules/@material-ui/core/esm/styles/colorManipulator.js");
+/* harmony import */ var _material_ui_core_FormControl__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(/*! @material-ui/core/FormControl */ "./node_modules/@material-ui/core/esm/FormControl/FormControl.js");
+/* harmony import */ var _material_ui_core_Select__WEBPACK_IMPORTED_MODULE_20__ = __webpack_require__(/*! @material-ui/core/Select */ "./node_modules/@material-ui/core/esm/Select/Select.js");
+/* harmony import */ var _material_ui_icons_Search__WEBPACK_IMPORTED_MODULE_22__ = __webpack_require__(/*! @material-ui/icons/Search */ "./node_modules/@material-ui/icons/Search.js");
 /* harmony import */ var react_infinite_scroller__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! react-infinite-scroller */ "./node_modules/react-infinite-scroller/index.js");
 /* harmony import */ var react_infinite_scroller__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(react_infinite_scroller__WEBPACK_IMPORTED_MODULE_3__);
 /* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
@@ -27514,8 +27596,24 @@ function MyPostsIndex(props) {
       myPosts = _useState2[0],
       setMyPosts = _useState2[1];
 
+  var _React$useState = react__WEBPACK_IMPORTED_MODULE_1__.useState(''),
+      _React$useState2 = _slicedToArray(_React$useState, 2),
+      tag = _React$useState2[0],
+      setTag = _React$useState2[1];
+
+  var _React$useState3 = react__WEBPACK_IMPORTED_MODULE_1__.useState(''),
+      _React$useState4 = _slicedToArray(_React$useState3, 2),
+      word = _React$useState4[0],
+      setWord = _React$useState4[1];
+
+  var _useState3 = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)([]),
+      _useState4 = _slicedToArray(_useState3, 2),
+      ranks = _useState4[0],
+      setRanks = _useState4[1];
+
   (0,react__WEBPACK_IMPORTED_MODULE_1__.useEffect)(function () {
     getMyPostsFirst(1);
+    getMyPostsRank();
     return function () {
       reset();
     };
@@ -27602,6 +27700,64 @@ function MyPostsIndex(props) {
       return _ref2.apply(this, arguments);
     };
   }();
+
+  var getMyPostsRank = /*#__PURE__*/function () {
+    var _ref3 = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee3() {
+      var queries, response;
+      return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee3$(_context3) {
+        while (1) {
+          switch (_context3.prev = _context3.next) {
+            case 0:
+              queries = {
+                tag_id: tag,
+                word: word,
+                id: props.user.id
+              };
+              _context3.next = 3;
+              return axios__WEBPACK_IMPORTED_MODULE_4___default().get("/api/myPostRank", {
+                params: queries
+              });
+
+            case 3:
+              response = _context3.sent;
+              console.log(response.data.rank);
+              setRanks(_toConsumableArray(response.data.rank));
+
+            case 6:
+            case "end":
+              return _context3.stop();
+          }
+        }
+      }, _callee3);
+    }));
+
+    return function getMyPostsRank() {
+      return _ref3.apply(this, arguments);
+    };
+  }();
+
+  var tagChange = function tagChange(event) {
+    setTag(event.target.value);
+    console.log(event.target.value);
+  };
+
+  var wordChange = function wordChange(event) {
+    if (event.target.value) {
+      window.document.onkeydown = function (event) {
+        if (event.key === 'Enter') {
+          setWord(event.target.value);
+          console.log(event.target.value);
+          event.target.value = "";
+        }
+      };
+    } else {
+      window.document.onkeydown = function (event) {
+        if (event.key === 'Enter') {
+          console.log('nothing');
+        }
+      };
+    }
+  };
 
   var reset = function reset() {
     props.setHasMore(true);
@@ -27757,14 +27913,84 @@ function MyPostsIndex(props) {
       }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)(_material_ui_core__WEBPACK_IMPORTED_MODULE_15__["default"], {
         item: true,
         xs: 4,
-        children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)(_material_ui_core__WEBPACK_IMPORTED_MODULE_16__["default"], {
+        children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxs)(_material_ui_core__WEBPACK_IMPORTED_MODULE_16__["default"], {
           color: "primary",
           anchor: "right",
           className: classes.drawer,
           variant: "permanent",
           classes: {
             paper: classes.drawerPaper
-          }
+          },
+          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)(_material_ui_core__WEBPACK_IMPORTED_MODULE_17__["default"], {}), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxs)("div", {
+            className: classes.drawerContainer,
+            children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxs)(_material_ui_core_FormControl__WEBPACK_IMPORTED_MODULE_18__["default"], {
+              className: classes.formControl,
+              children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)(_material_ui_core__WEBPACK_IMPORTED_MODULE_19__["default"], {
+                id: "demo-simple-select-label",
+                children: "\u696D\u754C\u691C\u7D22"
+              }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxs)(_material_ui_core_Select__WEBPACK_IMPORTED_MODULE_20__["default"], {
+                labelId: "demo-simple-select-label",
+                id: "demo-simple-select",
+                value: tag,
+                onChange: tagChange,
+                children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)(_material_ui_core__WEBPACK_IMPORTED_MODULE_21__["default"], {
+                  value: null,
+                  children: "\u5168\u696D\u754C"
+                }), props.tagList.map(function (tag) {
+                  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)(_material_ui_core__WEBPACK_IMPORTED_MODULE_21__["default"], {
+                    value: tag.id,
+                    children: tag.tag
+                  }, tag.id);
+                })]
+              })]
+            }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxs)("div", {
+              className: classes.search,
+              children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)("div", {
+                className: classes.searchIcon,
+                children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)(_material_ui_icons_Search__WEBPACK_IMPORTED_MODULE_22__["default"], {})
+              }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)(_material_ui_core__WEBPACK_IMPORTED_MODULE_23__["default"], {
+                placeholder: "\u691C\u7D22",
+                classes: {
+                  root: classes.inputRoot,
+                  input: classes.inputInput
+                },
+                inputProps: {
+                  'aria-label': 'search'
+                },
+                type: "text",
+                onChange: wordChange
+              })]
+            }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxs)("div", {
+              children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)(_material_ui_core_Typography__WEBPACK_IMPORTED_MODULE_10__["default"], {
+                className: classes.rankTitle,
+                children: "\u301C\u3044\u3044\u306D\u6570\u30E9\u30F3\u30AD\u30F3\u30B0\u301C"
+              }), ranks.map(function (rank, index) {
+                return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)(_material_ui_core_Card__WEBPACK_IMPORTED_MODULE_8__["default"], {
+                  variant: "outlined",
+                  className: classes.ranking,
+                  children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxs)(_material_ui_core_CardContent__WEBPACK_IMPORTED_MODULE_9__["default"], {
+                    children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxs)(_material_ui_core_Typography__WEBPACK_IMPORTED_MODULE_10__["default"], {
+                      children: ["\u7B2C", index + 1, "\u4F4D"]
+                    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxs)(_material_ui_core_Typography__WEBPACK_IMPORTED_MODULE_10__["default"], {
+                      children: ["\u3044\u3044\u306D\u6570\uFF1A", rank.likes_count]
+                    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxs)(_material_ui_core_Typography__WEBPACK_IMPORTED_MODULE_10__["default"], {
+                      children: ["\u30E6\u30FC\u30B6\u30FC\u540D\uFF1A", rank.user.name]
+                    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)("video", {
+                      src: "".concat(rank.video_path),
+                      controls: true,
+                      width: "75%"
+                    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)(_material_ui_core_Button__WEBPACK_IMPORTED_MODULE_14__["default"], {
+                      variant: "contained",
+                      color: "primary",
+                      component: react_router_dom__WEBPACK_IMPORTED_MODULE_12__.Link,
+                      to: "/timeline/".concat(rank.id),
+                      children: "\u8A73\u7D30"
+                    })]
+                  })
+                }, rank.id);
+              })]
+            })]
+          })]
         })
       })]
     })

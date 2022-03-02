@@ -20,9 +20,13 @@ function MyPostsIndex(props) {
     const windowWidth = window.outerWidth;
     const drawerWidth = windowWidth/4;
     const [myPosts, setMyPosts] = useState([]);
+    const [tag, setTag] = React.useState('');
+    const [word, setWord] = React.useState('');
+    const [ranks, setRanks] = useState([]);
 
     useEffect(() => {
         getMyPostsFirst(1)
+        getMyPostsRank()
         return () => {
             reset()
         }
@@ -52,6 +56,37 @@ function MyPostsIndex(props) {
         setMyPosts([...response.data.myposts.data])
         console.log('setMyPosts completed');
         console.log(response.data.myposts.data);
+    }
+
+    const getMyPostsRank = async() => {
+        const queries = {tag_id: tag, word: word, id: props.user.id};
+        const response = await axios.get(`/api/myPostRank`, {params: queries})
+
+        console.log(response.data.rank);
+        setRanks([...response.data.rank])
+    }
+
+    const tagChange = (event) => {
+        setTag(event.target.value);
+        console.log(event.target.value);
+    };
+
+    const wordChange = (event) => {
+        if (event.target.value) {
+            window.document.onkeydown = function(event){
+                if (event.key === 'Enter') {
+                    setWord(event.target.value);
+                    console.log(event.target.value);
+                    event.target.value = "";
+                }
+            }
+        } else {
+            window.document.onkeydown = function(event){
+                if (event.key === 'Enter') {
+                    console.log('nothing');
+                }
+            }
+        }
     }
 
     const reset = () => {
@@ -184,7 +219,52 @@ function MyPostsIndex(props) {
                 </Grid>
                 <Grid item xs={4}>
                     <Drawer color="primary" anchor="right" className={classes.drawer} variant="permanent" classes={{paper: classes.drawerPaper,}}>
-
+                        <Toolbar/>
+                        <div className={classes.drawerContainer}>
+                            <FormControl className={classes.formControl}>
+                                <InputLabel id="demo-simple-select-label">業界検索</InputLabel>
+                                <Select
+                                    labelId="demo-simple-select-label"
+                                    id="demo-simple-select"
+                                    value={tag}
+                                    onChange={tagChange}
+                                >
+                                    <MenuItem　value={null}>全業界</MenuItem>
+                                    {props.tagList.map((tag) =>
+                                        <MenuItem value={tag.id} key={tag.id}>{tag.tag}</MenuItem>
+                                    )}
+                                </Select>
+                            </FormControl>
+                            <div className={classes.search}>
+                                <div className={classes.searchIcon}>
+                                    <SearchIcon />
+                                </div>
+                                <InputBase
+                                    placeholder="検索"
+                                    classes={{
+                                        root: classes.inputRoot,
+                                        input: classes.inputInput,
+                                    }}
+                                    inputProps={{ 'aria-label': 'search' }}
+                                    type="text"
+                                    onChange={wordChange}
+                                />
+                            </div>
+                            <div>
+                                <Typography className={classes.rankTitle}>〜いいね数ランキング〜</Typography>
+                                {ranks.map((rank, index) =>
+                                    <Card key={rank.id} variant="outlined" className={classes.ranking}>
+                                        <CardContent>
+                                            <Typography>第{index+1}位</Typography>
+                                            <Typography>いいね数：{rank.likes_count}</Typography>
+                                            <Typography>ユーザー名：{rank.user.name}</Typography>
+                                            <video src={`${rank.video_path}`} controls width="75%"/>
+                                            <Button variant="contained" color="primary" component={RouterLink} to={`/timeline/${rank.id}`}>詳細</Button>
+                                        </CardContent>
+                                    </Card>
+                                )}
+                            </div>
+                        </div>
                     </Drawer>
                 </Grid>
             </Grid>

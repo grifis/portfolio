@@ -88,11 +88,11 @@ function App() {
                         </Route>
                         <Route path="message" element={<Message csrf_token={csrf_token} user={user}/>} />
                         <Route path="likes" element={<Likes />}>
-                            <Route index element={<LikesIndex csrf_token={csrf_token} user={user}  likePosts={likePosts} hasMoreLikePost={hasMoreLikePost} setLikePosts={setLikePosts} setHasMoreLikePost={setHasMoreLikePost}/>} />
+                            <Route index element={<LikesIndex csrf_token={csrf_token} user={user} likePosts={likePosts} hasMoreLikePost={hasMoreLikePost} setLikePosts={setLikePosts} setHasMoreLikePost={setHasMoreLikePost} tagList={tagList}/>} />
                             <Route path=":id" element={<LikesDetail movies={movies} users={users} />} />
                         </Route>
                         <Route path="myposts" element={<MyPosts csrf_token={csrf_token} user={user}/>} >
-                            <Route index element={<MyPostsIndex csrf_token={csrf_token} user={user} movies={movies} users={users} hasMore={hasMore} setHasMore={setHasMore}/>} />
+                            <Route index element={<MyPostsIndex csrf_token={csrf_token} user={user} movies={movies} users={users} hasMore={hasMore} setHasMore={setHasMore} tagList={tagList}/>} />
                             <Route path=":id" element={<MyPostsDetail movies={movies} users={users} />} />
                         </Route>
                         <Route path="timeline" element={<TimeLine />} >

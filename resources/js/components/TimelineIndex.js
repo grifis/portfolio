@@ -22,7 +22,6 @@ function TimeLineIndex(props) {
     const drawerWidth = windowWidth/4;
     const [tag, setTag] = React.useState('');
     const [word, setWord] = React.useState('');
-    const [tagList, setTagList] = React.useState([]);
     const [movies, setMovies] = useState([]);
     const [ranks, setRanks] = useState([]);
 
@@ -74,7 +73,7 @@ function TimeLineIndex(props) {
 
     const tagChange = (event) => {
         setTag(event.target.value);
-        console.log(event.target.value)
+        console.log(event.target.value);
     };
 
     const wordChange = (event) => {
@@ -94,8 +93,6 @@ function TimeLineIndex(props) {
                 }
         }
     }
-
-
 
     const useStyles = makeStyles((theme) => ({
         root: {

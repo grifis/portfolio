@@ -64,6 +64,10 @@ Route::get('/tag', 'App\Http\Controllers\PostsController@tag');
 
 Route::get('/rank', 'App\Http\Controllers\PostsController@rank');
 
+Route::get('/likePostRank', 'App\Http\Controllers\PostsController@likePostRank');
+
+Route::get('/myPostRank', 'App\Http\Controllers\PostsController@myPostRank');
+
 Route::get('/profile/{profile}', 'App\Http\Controllers\PostsController@profile');
 
 Route::put('/profile/modify/{user}', 'App\Http\Controllers\PostsController@modifyProfile');
