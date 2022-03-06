@@ -19,6 +19,7 @@ function TimelineDetail(props) {
         que: "",
         path: "",
         name: "",
+        userId: "",
         tag: "",
     });
     const [isLiked, setIsLiked] = useState({
@@ -29,6 +30,7 @@ function TimelineDetail(props) {
     })
     const params = useParams();
     const navigate = useNavigate();
+    const tes = props.user.id === postDetail.userId;
 
     useEffect(() => {
         getPostDetail()
@@ -53,6 +55,7 @@ function TimelineDetail(props) {
             que: response.data.post.question.question,
             path: response.data.post.video_path,
             name: response.data.post.user.name,
+            userId: response.data.post.user.id,
             tag: response.data.post.tag.tag,
         })
     }
@@ -166,11 +169,13 @@ function TimelineDetail(props) {
                                 )}
                             </CardContent>
                             <CardContent>
-                                <Button variant="contained" color="primary" component={Link} to={'/timeline'} className={classes.button}>戻る</Button>
-                                <FormControl>
-                                    <input type='hidden' value={props.csrf_token}/>
-                                    <Button color="secondary" variant="contained" type='submit' onClick={deletePost} className={classes.button}>削除</Button>
-                                </FormControl>
+                                <Button variant="contained" color="primary" onClick={() => navigate(-1)} className={classes.button}>戻る</Button>
+                                { tes ? (
+                                    <FormControl>
+                                        <input type='hidden' value={props.csrf_token}/>
+                                        <Button color="secondary" variant="contained" type='submit' onClick={deletePost} className={classes.button}>削除</Button>
+                                    </FormControl>
+                                ) : null}
                             </CardContent>
                         </Card>
                 </Grid>
