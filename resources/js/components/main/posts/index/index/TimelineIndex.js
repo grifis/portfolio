@@ -1,5 +1,4 @@
 import React, {useEffect, useState} from 'react';
-import Test from './Test';
 import { Link as RouterLink } from "react-router-dom";
 import Button from '@material-ui/core/Button';
 import Card from '@material-ui/core/Card';
@@ -14,7 +13,8 @@ import SearchIcon from '@material-ui/icons/Search';
 import InfiniteScroll  from "react-infinite-scroller";
 import axios from "axios";
 import Link from '@material-ui/core/Link';
-import Box from "@material-ui/core/Box";
+
+import Test from '../../../../Test';
 
 function TimeLineIndex(props) {
 
@@ -88,6 +88,7 @@ function TimeLineIndex(props) {
         } else {
                 window.document.onkeydown = function(event){
                     if (event.key === 'Enter') {
+                        setWord(null);
                         console.log('nothing');
                     }
                 }

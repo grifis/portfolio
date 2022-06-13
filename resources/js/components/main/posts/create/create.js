@@ -1,45 +1,42 @@
 import React, {useEffect, useState} from 'react';
 import Webcam from "react-webcam";
-import NavBar from './NavBar';
 import { useNavigate } from 'react-router-dom';
 import axios from "axios";
 import Box from '@material-ui/core/Box';
 import Button from '@material-ui/core/Button';
 import { Grid } from '@material-ui/core';
 import Typography from '@material-ui/core/Typography';
-import {alpha, makeStyles} from "@material-ui/core/styles";
+import { makeStyles} from "@material-ui/core/styles";
 import Card from '@material-ui/core/Card';
-import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 import FormControl from "@material-ui/core/FormControl";
 
-
 const WebcamComponent = () => <Webcam />;
 
-function Practice(props) {
+function Create(props) {
     const navigate = useNavigate();
     const webcamRef = React.useRef(null);
     const mediaRecorderRef = React.useRef(null);
-    const [capturing, setCapturing] = React.useState(false);
-    const [recordedChunks, setRecordedChunks] = React.useState([]);
-    const [questions, setQuestions] = useState([]);
+    const [capturing, setCapturing] = React.useState(false);  //録画状態のステータス
+    const [recordedChunks, setRecordedChunks] = React.useState([]);  //録画データ
+    const [questions, setQuestions] = useState([]);  //質問データ
 
     useEffect(() => {
         getQuestions()
     }, [])
 
-    const getQuestions = async() => {
+    const getQuestions = async() => {  //質問を取得する関数
         const response = await axios.get('/api/question');
         let num = Math.floor(Math.random() * response.data.que.length);
         setQuestions(response.data.que[num]);
         console.log(response.data.que[num]);
     }
 
-    const handleStartCaptureClick = React.useCallback(() => {
-        setCapturing(true);
-        const userAgent = window.navigator.userAgent;
+    const handleStartCaptureClick = React.useCallback(() => {  //録画開始用関数
+        setCapturing(true);  //ステータスの変更
+        const userAgent = window.navigator.userAgent;  //ユーザーのブラウザ情報を取得
         let mimeCode = "video/mp4"
-        if(userAgent.indexOf('Chrome') != -1) {
+        if(userAgent.indexOf('Chrome') != -1) {  //chromeならwebm, safariならmp4で録画
             mimeCode = "video/webm"
         }
         mediaRecorderRef.current = new MediaRecorder(webcamRef.current.stream, {
@@ -49,7 +46,7 @@ function Practice(props) {
             "dataavailable",
             handleDataAvailable
         );
-        mediaRecorderRef.current.start();
+        mediaRecorderRef.current.start();  //録画開始
     }, [webcamRef, setCapturing, mediaRecorderRef]);
 
     const handleDataAvailable = React.useCallback(
@@ -68,26 +65,26 @@ function Practice(props) {
 
 
 
-    const handleDownload = React.useCallback((e) => {  //recordedChunksが変化した時に再計算
+    const handleSubmit = React.useCallback((e) => {  //recordedChunksが変化した時に再計算
         e.preventDefault();
         if (recordedChunks.length) {
             const blob = new Blob(recordedChunks, {   //Blobはバイナリを扱う
                 type: "video/webm"
             });
             const url = URL.createObjectURL(blob);  //メモリに保存されたblobにアクセス可能なURLを生成
-            const data = new FormData();
+            const data = new FormData();  //送信するデータ
             data.append('video', blob, 'sample.webm');
             data.append('userId', props.user.id);
             data.append('tagId', props.user.tag_id);
             data.append('questionId', questions.id);
-            axios.post('/api/upload', data, {
+            axios.post('/api/upload', data, {  //Laravelへデータを送信
                 headers: { 'content-type': 'multipart/form-data'},
             })
                 .then(res => {
                     console.log('success')
-                    navigate('/timeline')
+                    navigate('/timeline')  //成功した場合、タイムラインへ遷移
                 }).catch(response => {
-                console.log(response)
+                console.log(response)  //エラーが出た場合、コンソールに表示
             });
             window.URL.revokeObjectURL(url);  //メモリの解放
             setRecordedChunks([]);
@@ -143,8 +140,7 @@ function Practice(props) {
                             )}
                             {recordedChunks.length > 0 && (
                                 <FormControl>
-                                    <input type='hidden' value={props.csrf_token}/>
-                                    <Button　color="primary" variant="contained" type='submit' onClick={handleDownload} className={classes.button}>投稿</Button>
+                                    <Button　color="primary" variant="contained" type='submit' onClick={handleSubmit} className={classes.button}>投稿</Button>
                                 </FormControl>
                             )}
                         </Box>
@@ -155,4 +151,4 @@ function Practice(props) {
     );
 }
 
-export default Practice;
+export default Create;

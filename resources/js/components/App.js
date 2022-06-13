@@ -1,41 +1,39 @@
 import React, { useState, useEffect } from 'react';
 import ReactDOM from 'react-dom';
-import TimeLine from './TimeLine';
-import Practice from './Practice';
-import Profile from "./mypage/Profile";
-import Message from "./mypage/Message";
-import Likes from "./mypage/Likes";
-import MyPosts from "./mypage/MyPosts";
-import TimelineDetail from "./TimelineDetail";
-import NavBar from './NavBar';
-import MyPostsIndex from "./mypage/MyPostsIndex";
-import MyPostsDetail from "./mypage/MyPostsDetail";
-import LikesIndex from "./mypage/LikesIndex";
-import LikesDetail from "./mypage/LikesDetail";
 import {BrowserRouter as Router, Routes, Route} from 'react-router-dom';
 import axios from "axios";
-import TimeLineIndex from "./TimelineIndex";
 import { Grid } from '@material-ui/core';
-import UserProfile from "./UserProfile";
-import EditProfile from "./EditProfile";
+
+import Create from './main/posts/create/create';
+import Message from "./tmp/Message";
+import TimelineDetail from "./main/posts/show/show/TimelineDetail";
+import NavBar from './layout/NavBar';
+import MyPostsIndex from "./main/posts/index/myIndex/MyPostsIndex";
+import MyPostsDetail from "./main/posts/show/myPostsShow/MyPostsDetail";
+import LikesIndex from "./main/posts/index/likesIndex/LikesIndex";
+import LikesDetail from "./main/posts/show/likesShow/LikesDetail";
+import TimeLineIndex from "./main/posts/index/index/TimelineIndex";
+import UserProfile from "./main/profile/UserProfile";
+import EditProfile from "./main/profile/EditProfile";
 
 
 function App() {
     const csrftoken = document.head.querySelector('meta[name="csrf-token"]').content;
     const [csrf_token, setCsrf_token] = useState({csrftoken});
-    const element = document.getElementById('apple');
     const [users, setUsers] = useState([]);
     const [movies, setMovies] = useState([]);
     const [likePosts, setLikePosts] = useState([]);
     const [hasMore, setHasMore] = useState(true);
     const [tagList, setTagList] = React.useState([]);
     const [hasMoreLikePost, setHasMoreLikePost] = useState(true);
+    const [user, setUser] = useState([]);
+    const element = document.getElementById('apple');
     let stock  = [];
     if (element && element.dataset.user) {
         stock = JSON.parse(element.dataset.user)
     }
 
-    const [user, setUser] = useState([]);
+
     useEffect(() => {
         getUsers()
         getTagList()
@@ -68,10 +66,6 @@ function App() {
         console.log('setUsers completed')
     }
 
-
-
-
-
     return (
         <Router>
             <Grid container direction="column">
@@ -82,24 +76,16 @@ function App() {
                     <Grid item />
                     <Grid item xs={12} sm={12}>
                     <Routes>
-                        <Route path="profile" element={<Profile csrf_token={csrf_token} user={user}/>} >
-                            <Route path=":id" element={<UserProfile user={user} csrf_token={csrf_token}/>} />
-                            <Route path=":id/edit" element={<EditProfile user={user} csrf_token={csrf_token} tagList={tagList}/>} />
-                        </Route>
-                        <Route path="message" element={<Message csrf_token={csrf_token} user={user}/>} />
-                        <Route path="likes" element={<Likes />}>
-                            <Route index element={<LikesIndex csrf_token={csrf_token} user={user} likePosts={likePosts} hasMoreLikePost={hasMoreLikePost} setLikePosts={setLikePosts} setHasMoreLikePost={setHasMoreLikePost} tagList={tagList}/>} />
-                            <Route path=":id" element={<LikesDetail movies={movies} users={users} />} />
-                        </Route>
-                        <Route path="myposts" element={<MyPosts csrf_token={csrf_token} user={user}/>} >
-                            <Route index element={<MyPostsIndex csrf_token={csrf_token} user={user} movies={movies} users={users} hasMore={hasMore} setHasMore={setHasMore} tagList={tagList}/>} />
-                            <Route path=":id" element={<MyPostsDetail movies={movies} users={users} />} />
-                        </Route>
-                        <Route path="timeline" element={<TimeLine />} >
-                            <Route index element={<TimeLineIndex csrf_token={csrf_token} user={user} hasMore={hasMore} setHasMore={setHasMore} tagList={tagList}/>} />
-                            <Route path=":id" element={<TimelineDetail movies={movies} user={user} csrf_token={csrf_token} />} />
-                        </Route>
-                        <Route path="practice" element={<Practice csrf_token={csrf_token} post={post} user={user}/>} />
+                        <Route path="profile/:id" element={<UserProfile />} />
+                        <Route path="profile/:id/edit" element={<EditProfile user={user} tagList={tagList}/>} />
+                        <Route path="message" element={<Message />} />
+                        <Route path="likes" element={<LikesIndex user={user} likePosts={likePosts} hasMoreLikePost={hasMoreLikePost} setLikePosts={setLikePosts} setHasMoreLikePost={setHasMoreLikePost} tagList={tagList}/>} />
+                        <Route path="likes/:id" element={<LikesDetail movies={movies} users={users} />} />
+                        <Route path="myposts" element={<MyPostsIndex csrf_token={csrf_token} user={user} movies={movies} users={users} hasMore={hasMore} setHasMore={setHasMore} tagList={tagList}/>} />
+                        <Route path="myposts/:id" element={<MyPostsDetail movies={movies} users={users} />} />
+                        <Route path="timeline" element={<TimeLineIndex csrf_token={csrf_token} user={user} hasMore={hasMore} setHasMore={setHasMore} tagList={tagList}/>} />
+                        <Route path="timeline/:id" element={<TimelineDetail movies={movies} user={user} csrf_token={csrf_token} />} />
+                        <Route path="practice" element={<Create post={post} user={user}/>} />
                     </Routes>
                     </Grid>
                     <Grid item />

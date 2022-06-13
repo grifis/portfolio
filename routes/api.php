@@ -39,41 +39,22 @@ Route::get('/movie', function(Request $request) {
     return response()->json(['movie' => $movie]);
 });
  */
-
 Route::get('/movie', 'App\Http\Controllers\PostsController@movie');
-
 Route::get('/myPosts', 'App\Http\Controllers\PostsController@myPost');
-
 Route::get('/likePosts', 'App\Http\Controllers\PostsController@likePosts');
-
 Route::post('/api/logout', 'Auth\RegisterController@showRegistrationForm')->name('register');
-
 Route::post('/upload', 'App\Http\Controllers\PostsController@upload');
-
 Route::get('/question', 'App\Http\Controllers\PostsController@question');
-
 Route::get('/timeline/{postId}', 'App\Http\Controllers\PostsController@timelinePost');
-
 Route::get('/mypost/{myPostId}', 'App\Http\Controllers\PostsController@showMyPost');
-
 Route::get('/isLiked/{id}', 'App\Http\Controllers\PostsController@isLiked');
-
 Route::get('/likesCount/{id}', 'App\Http\Controllers\PostsController@likesCount');
-
 Route::get('/tag', 'App\Http\Controllers\PostsController@tag');
-
 Route::get('/rank', 'App\Http\Controllers\PostsController@rank');
-
 Route::get('/likePostRank', 'App\Http\Controllers\PostsController@likePostRank');
-
 Route::get('/myPostRank', 'App\Http\Controllers\PostsController@myPostRank');
-
 Route::get('/profile/{profile}', 'App\Http\Controllers\PostsController@profile');
-
 Route::put('/profile/modify/{user}', 'App\Http\Controllers\PostsController@modifyProfile');
-
 Route::post('/like/{id}', 'App\Http\Controllers\PostsController@like');
-
 Route::delete('/unlike/{id}', 'App\Http\Controllers\PostsController@unlike');
-
 Route::delete('/delete/{deleteId}', 'App\Http\Controllers\PostsController@deletePost');

@@ -172,7 +172,6 @@ function TimelineDetail(props) {
                                 <Button variant="contained" color="primary" onClick={() => navigate(-1)} className={classes.button}>戻る</Button>
                                 { tes ? (
                                     <FormControl>
-                                        <input type='hidden' value={props.csrf_token}/>
                                         <Button color="secondary" variant="contained" type='submit' onClick={deletePost} className={classes.button}>削除</Button>
                                     </FormControl>
                                 ) : null}

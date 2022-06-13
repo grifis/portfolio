@@ -18,14 +18,14 @@ function EditProfile(props) {
         name: "",
         text: "",
         tag: "",
-        tagId: "",
+        tag_id: "",
     });
 
     useEffect(() => {
         getProfile()
     }, [])
 
-    const modify = {name: profile.name, text: profile.text, tagId: tag}
+    const modify = {name: profile.name, text: profile.text, tag_id: tag}
 
     const putProfile = async() => {
         const response = await axios.put(`/api/profile/modify/${id}`, modify)
@@ -44,7 +44,7 @@ function EditProfile(props) {
             name: response.data.profile.name,
             text: response.data.profile.text,
             tag: response.data.profile.tag.tag,
-            tagId: response.data.profile.tag_id,
+            tag_id: response.data.profile.tag_id,
         });
         setTag(`${response.data.profile.tag_id}`);
     }
@@ -100,7 +100,7 @@ function EditProfile(props) {
                             </CardContent>
                             <CardContent>
                                 <TextField  label='ひとこと' variant="outlined" value={profile.text} onChange={(e) => {
-                                    setProfile({name: profile.name, text: e.target.value, tag: profile.tag, tagId: profile.tagId});
+                                    setProfile({name: profile.name, text: e.target.value, tag: profile.tag, tag_id: profile.tag_id});
                                 }}/>
                             </CardContent>
                             <CardActions>

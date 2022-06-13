@@ -1,8 +1,7 @@
 import React from 'react';
-import MyPageNav from "./mypage/MyPageNav";
+import MyPageNav from "./MyPageNav";
 
 function MyPage(props) {
-
 
     return (
         <div>

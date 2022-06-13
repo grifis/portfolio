@@ -9,6 +9,7 @@ use App\Models\Question;
 use App\Models\User;
 use App\Models\Like;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Log;
 
 class PostsController extends Controller
 {
@@ -28,7 +29,7 @@ class PostsController extends Controller
 
         $post->video_path = Storage::disk('s3')->url($path);
 
-        $post->save();
+
 
         return redirect('/create');
     }
@@ -42,12 +43,11 @@ class PostsController extends Controller
     public function upload(Request $request)
     {
         $post = new Post;
-        $video = $request->file('video');
         $userId = $request->input('userId');
         $tagId = $request->input('tagId');
         $questionId = $request->input('questionId');
 
-
+        $video = $request->file('video');
         $path = Storage::disk('s3')->putFile('image', $video, 'public');
 
         $post->video_path = Storage::disk('s3')->url($path);
@@ -124,39 +124,10 @@ class PostsController extends Controller
         return response()->json(['count' => $count]);
     }
 
-    public function movie(Request $request)
+    public function movie(Request $request, Post $post)
     {
-        $movie = Post::with('question', 'user', 'tag' ,'likes')->latest()->paginate(4);
-        $tag_id = $request->input('tag_id');
-        $word = $request->input('word');
-        if ($tag_id) {
-            if ($word) {
-                $movie = Post::with('question', 'user', 'tag' ,'likes')->
-                whereHas('tag', function($q) use($tag_id){
-                    $q->where('id', $tag_id);
-                })->
-                whereHas('question', function($q) use($word){
-                    $q->where('question', 'like', "%$word%");
-                })->latest()->paginate(4);
-            } else {
-                $movie = Post::with('question', 'user', 'tag' ,'likes')->whereHas('tag', function($q) use($tag_id){
-                    $q->where('id', $tag_id);
-                })->latest()->paginate(4);
-            }
-
-        } elseif ($word) {
-            $movie = Post::with('question', 'user', 'tag' ,'likes')->whereHas('question', function($q) use($word){
-                $q->where('question', 'like', "%$word%");
-            })->latest()->paginate(4);
-        }
+        $movie = $post->getMovie($request);
         return response()->json(['movie' => $movie]);
-    }
-
-    public function myPost(Request $request)
-    {
-        $id = $request->input("id");
-        $myposts = Post::with('question', 'user', 'tag', 'likes')->where('user_id', $id)->latest()->paginate(4);
-        return response()->json(['myposts' => $myposts]);
     }
 
     public function likePosts(Request $request)
@@ -204,13 +175,7 @@ class PostsController extends Controller
 
     public function modifyProfile(Request $request, User $user)
     {
-        $name = $request->input('name');
-        $text = $request->input('text');
-        $tagId = $request->input('tagId');
-
-        $user->name = $name;
-        $user->text = $text;
-        $user->tag_id = $tagId;
-        $user->save();
+        $input = $request->all();
+        $user->fill($input)->save();
     }
 }

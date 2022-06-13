@@ -1,66 +1,69 @@
-import React, {useEffect, useState} from 'react';
-import Test from '../Test';
-import { Link as RouterLink } from "react-router-dom";
+import React, { useState, useEffect } from 'react';
+import {Link as RouterLink, Link} from "react-router-dom";
+import axios from "axios";
 import Button from '@material-ui/core/Button';
 import Card from '@material-ui/core/Card';
 import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
-import {Drawer, Grid, InputBase, InputLabel, MenuItem, Toolbar} from '@material-ui/core';
+import { Drawer, Grid, InputBase, InputLabel, MenuItem, Toolbar} from '@material-ui/core';
 import { makeStyles, alpha} from '@material-ui/core/styles';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 import SearchIcon from '@material-ui/icons/Search';
 import InfiniteScroll  from "react-infinite-scroller";
-import axios from "axios";
-import Link from '@material-ui/core/Link';
-import Box from "@material-ui/core/Box";
+import Test from "../../../../Test";
 
-function MyPostsIndex(props) {
+function LikesIndex(props) {
+    const likePosts = props.likePosts
     const windowWidth = window.outerWidth;
     const drawerWidth = windowWidth/4;
-    const [myPosts, setMyPosts] = useState([]);
     const [tag, setTag] = React.useState('');
     const [word, setWord] = React.useState('');
     const [ranks, setRanks] = useState([]);
 
+    const element = document.getElementById('apple');
+    let user  = [];
+    if (element && element.dataset.user) {
+        user = JSON.parse(element.dataset.user);
+        console.log(user);
+    }
+
     useEffect(() => {
-        getMyPostsFirst(1)
-        getMyPostsRank()
+        getLikeFirst(1)
+        getLikePostRank()
         return () => {
             reset()
         }
     }, []);
 
-    const getMyPosts = async(page) => {
-        const queries = {id: props.user.id};
-        const response = await axios.get(`/api/myPosts?page=${page}`, {params: queries})
-        if (response.data.myposts.data.length < 1) {
-            props.setHasMore(false);
+    const getLikePosts = async(page) => {
+        const queries = {id: user.id};
+        const response = await axios.get(`/api/likePosts?page=${page}`, {params: queries})
+        if (response.data.posts.data.length < 1) {
+            props.setHasMoreLikePost(false);
             console.log('no posts')
-        } else {
-            props.setHasMore(true);
+            return;
         }
-        console.log('setMyPosts completed');
-        console.log(response.data.myposts.data);
-        setMyPosts([...myPosts, ...response.data.myposts.data])
+        console.log(response.data.posts.data);
+        props.setLikePosts([...likePosts, ...response.data.posts.data])
     }
 
-    const getMyPostsFirst = async(page) => {
-        const queries = {id: props.user.id};
-        const response = await axios.get(`/api/myPosts?page=${page}`, {params: queries})
-        if (response.data.myposts.data.length < 1) {
-            props.setHasMore(false);
+    const getLikeFirst = async(page) => {
+        const queries = {id: user.id};
+        const response = await axios.get(`/api/likePosts?page=${page}`, {params: queries})
+        if (response.data.posts.data.length < 1) {
+            props.setHasMoreLikePost(false);
             console.log('no posts')
+            return;
         }
-        setMyPosts([...response.data.myposts.data])
-        console.log('setMyPosts completed');
-        console.log(response.data.myposts.data);
+        console.log(response.data.posts.data)
+        props.setLikePosts([...response.data.posts.data])
     }
 
-    const getMyPostsRank = async() => {
-        const queries = {tag_id: tag, word: word, id: props.user.id};
-        const response = await axios.get(`/api/myPostRank`, {params: queries})
+    const getLikePostRank = async() => {
+        const queries = {tag_id: tag, word: word, id: user.id};
+        const response = await axios.get(`/api/likePostRank`, {params: queries})
 
         console.log(response.data.rank);
         setRanks([...response.data.rank])
@@ -68,7 +71,7 @@ function MyPostsIndex(props) {
 
     const tagChange = (event) => {
         setTag(event.target.value);
-        console.log(event.target.value);
+        console.log(event.target.value)
     };
 
     const wordChange = (event) => {
@@ -90,12 +93,10 @@ function MyPostsIndex(props) {
     }
 
     const reset = () => {
-        props.setHasMore(true);
         console.log('リセットされたよ');
+        props.setHasMoreLikePost(true);
     }
 
-
-    const loader =<div className="loader" key={0}>Loading ...</div>;
 
     const useStyles = makeStyles((theme) => ({
         root: {
@@ -175,43 +176,49 @@ function MyPostsIndex(props) {
 
     const classes = useStyles();
 
+    //表示するデータ
+    const [list, setList] = useState([])
+
+    //項目を読み込むときのコールバック
+    const loadMore = (page) => {
+        setList([...list, page])
+    }
+
+    //各スクロール要素
     const items = (
         <div>
-
-            {myPosts.map((myPost) =>
-                <Card variant="outlined" key={myPost.id} className={classes.menuButton}>
+            {likePosts.map((likePost) =>
+                <Card variant="outlined" key={likePost.id} className={classes.menuButton}>
                     <CardContent>
-                        <Typography color="textSecondary">
-                            ユーザー名:
-                            <Link color="textSecondary" component={RouterLink} to={`/profile/${myPost.user.id}`} >
-                                {myPost.user.name}
-                            </Link>
-                        </Typography>
-                        <Typography color="textSecondary">質問文:{myPost.question.question}</Typography>
-                        <Typography color="textSecondary">志望業界:{myPost.tag.tag}</Typography>
+                        <Typography color="textSecondary">ユーザー名:{likePost.user.name}</Typography>
+                        <Typography color="textSecondary">質問文:{likePost.question.question}</Typography>
+                        <Typography color="textSecondary">志望業界:{likePost.tag.tag}</Typography>
                         <CardActions>
-                            <video src={`${myPost.video_path}`} controls width="75%"/>
+                            <video src={`${likePost.video_path}`} controls width="75%"/>
                         </CardActions>
                         <CardActions>
-                            <Button variant="contained" color="primary" component={RouterLink} to={`/timeline/${myPost.id}`}>詳細</Button>
-                            <Test user={props.user} movie={myPost}/>
+                            <Button variant="contained" color="primary" component={Link} to={`/likes/${likePost.id}`}>詳細</Button>
+                            <Test user={props.user} movie={likePost}/>
                         </CardActions>
                     </CardContent>
                 </Card>
             )}
         </div>);
 
+    //ロード中に表示する項目
+    const loader =<div className="loader" key={0}>Loading ...</div>;
+
     return (
         <div>
             <Grid item container >
                 <Grid item xs={8}>
                     <div>
-                        <Typography>タイムライン</Typography>
+                        <Typography>いいねした投稿</Typography>
                         <InfiniteScroll
                             pageStart={1}
                             initialLoad={false}
-                            loadMore={getMyPosts}    //項目を読み込む際に処理するコールバック関数
-                            hasMore={props.hasMore}         //読み込みを行うかどうかの判定
+                            loadMore={getLikePosts}    //項目を読み込む際に処理するコールバック関数
+                            hasMore={props.hasMoreLikePost}         //読み込みを行うかどうかの判定
                             loader={loader}>      {/* 読み込み最中に表示する項目 */}
                             {items}             {/* 無限スクロールで表示する項目 */}
                         </InfiniteScroll>
@@ -272,4 +279,4 @@ function MyPostsIndex(props) {
     );
 }
 
-export default MyPostsIndex;
+export default LikesIndex;
