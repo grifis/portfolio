@@ -20,6 +20,7 @@ function Create(props) {
     const [capturing, setCapturing] = React.useState(false);  //録画状態のステータス
     const [recordedChunks, setRecordedChunks] = React.useState([]);  //録画データ
     const [questions, setQuestions] = useState([]);  //質問データ
+    const [audioSource, setAudioSource] = useState('');
 
     useEffect(() => {
         getQuestions()
@@ -29,8 +30,20 @@ function Create(props) {
         const response = await axios.get('/api/question');
         let num = Math.floor(Math.random() * response.data.que.length);
         setQuestions(response.data.que[num]);
-        console.log(response.data.que[num]);
+
+        const axiosInstance = axios.create();
+        const url = axiosInstance.getUri({
+            url: 'https://api.su-shiki.com/v2/voicevox/audio/',
+            params: {
+                text:`${response.data.que[num].question}`,
+                key:"Z7853_37245_40A",
+            }
+        });
+        setAudioSource(`${url}`);
+        const music = new Audio(`${url}`);
+        capturing && music.play();
     }
+
 
     const handleStartCaptureClick = React.useCallback(() => {  //録画開始用関数
         setCapturing(true);  //ステータスの変更
@@ -40,14 +53,18 @@ function Create(props) {
             mimeCode = "video/webm"
         }
         mediaRecorderRef.current = new MediaRecorder(webcamRef.current.stream, {
-            mimeType: mimeCode
+            mimeType: mimeCode,
+            audio: true,
+            video: true
         });
         mediaRecorderRef.current.addEventListener(
             "dataavailable",
             handleDataAvailable
         );
         mediaRecorderRef.current.start();  //録画開始
-    }, [webcamRef, setCapturing, mediaRecorderRef]);
+        const music = new Audio(audioSource);
+        music.play();
+    }, [webcamRef, setCapturing, mediaRecorderRef, audioSource]);
 
     const handleDataAvailable = React.useCallback(
         ({ data }) => {
@@ -74,9 +91,9 @@ function Create(props) {
             const url = URL.createObjectURL(blob);  //メモリに保存されたblobにアクセス可能なURLを生成
             const data = new FormData();  //送信するデータ
             data.append('video', blob, 'sample.webm');
-            data.append('userId', props.user.id);
-            data.append('tagId', props.user.tag_id);
-            data.append('questionId', questions.id);
+            data.append('user_id', props.user.id);
+            data.append('tag_id', props.user.tag_id);
+            data.append('question_id', questions.id);
             axios.post('/api/upload', data, {  //Laravelへデータを送信
                 headers: { 'content-type': 'multipart/form-data'},
             })
@@ -144,6 +161,7 @@ function Create(props) {
                                 </FormControl>
                             )}
                         </Box>
+                        <audio id="audioTag" src={audioSource}></audio>
                     </Box>
                 </Grid>
             </Grid>

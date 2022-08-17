@@ -6,26 +6,21 @@ import FavoriteBorderIcon from "@material-ui/icons/FavoriteBorder";
 import Typography from "@material-ui/core/Typography";
 
 function Test(props) {
-    const [isLiked, setIsLiked] = useState([]);
-    const [likesCount, setLikesCount] = useState({
-        count: "",
-    })
     const movie = props.movie;
+    const [isLiked, setIsLiked] = useState(false);
+    const [likesCount, setLikesCount] = useState(movie.likes_count);
 
     useEffect(() => {
-        getIsLiked()
+        isLikedByAuth();
     }, [])
 
-    const getIsLiked = async () => {
-        const queries = { user_id: props.user.id, post_id: movie.id};
-        const response = await
-            axios.get(`/api/isLiked/${movie.id}`, {params: queries})
-        setIsLiked(response.data.bool)
-        setLikesCount({
-            count: response.data.count
-        })
-        console.log('id=' + `${movie.id}`)
-        console.log(response.data)
+    function isLikedByAuth() {  //投稿にいいねをしたuser_idのなかログインユーザーのidが入っているかを判定する。
+        for(let i in movie.likes) {
+            if(movie.likes[i].user_id === props.user.id){
+                setIsLiked(true);
+                break;
+            }
+        }
     }
 
     const likePost = (id, e) => {
@@ -33,8 +28,8 @@ function Test(props) {
         const data = { user_id: props.user.id, post_id: id}
         axios.post(`/api/like/${id}`, data)
             .then(res => {
-                console.log('successfully liked');
-                getIsLiked();
+                setLikesCount(likesCount+1);
+                setIsLiked(true);
             })
     }
 
@@ -43,8 +38,8 @@ function Test(props) {
         const param = { user_id: props.user.id, post_id: id}
         axios.delete(`/api/unlike/${id}`, {data: param})
             .then(res => {
-                console.log('successfully unliked');
-                getIsLiked();
+                setLikesCount(likesCount-1);
+                setIsLiked(false);
             }).catch(err => {
             console.log(err)
         })
@@ -55,17 +50,17 @@ function Test(props) {
             { isLiked ? (
                 <form>
                     <input type='hidden' value={props.csrf_token}/>
-                    <IconButton type='submit' onClick={function(){const id = movie.id;unLikePost(id, arguments[0])}}>
+                    <IconButton type='submit' onClick={event => unLikePost(movie.id, event)}> {/*アロー関数の省略記法を使用*/}
                         <FavoriteIcon color={"secondary"}/>
-                        <Typography>{likesCount.count}</Typography>
+                        <Typography>{likesCount}</Typography>
                     </IconButton>
                 </form>
             ) : (
                 <form>
                     <input type='hidden' value={props.csrf_token}/>
-                    <IconButton type='submit' onClick={function(){const id = movie.id;likePost(id, arguments[0])}}>
+                    <IconButton type='submit' onClick={event => likePost(movie.id, event)}>
                         <FavoriteBorderIcon />
-                        <Typography>{likesCount.count}</Typography>
+                        <Typography>{likesCount}</Typography>
                     </IconButton>
                 </form>
             )}

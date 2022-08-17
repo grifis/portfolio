@@ -9,27 +9,23 @@ use App\Models\Question;
 use App\Models\User;
 use App\Models\Like;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\Log;
 
 class PostsController extends Controller
 {
     public function add()
     {
-        return view('posts.create');
+        return view('create');
     }
 
     public function create(Request $request)
     {
         $post = new Post;
-        $form = $request->all();
 
         $image = $request->file('image');
 
         $path = Storage::disk('s3')->putFile('image', $image, 'public');
 
         $post->video_path = Storage::disk('s3')->url($path);
-
-
 
         return redirect('/create');
     }
@@ -40,25 +36,9 @@ class PostsController extends Controller
         return view('output', ['user_images' => $user_images]);
     }
 
-    public function upload(Request $request)
+    public function upload(Request $request, Post $post)
     {
-        $post = new Post;
-        $userId = $request->input('userId');
-        $tagId = $request->input('tagId');
-        $questionId = $request->input('questionId');
-
-        $video = $request->file('video');
-        $path = Storage::disk('s3')->putFile('image', $video, 'public');
-
-        $post->video_path = Storage::disk('s3')->url($path);
-        $post->user_id = $userId;
-        $post->tag_id = $tagId;
-        $post->body = 'sample';
-        $post->question_id = $questionId;
-
-        $post->save();
-
-        return ;
+        $post->upload($request);
     }
 
     public function question()
@@ -87,13 +67,7 @@ class PostsController extends Controller
 
     public function like(Request $request)
     {
-        Like::create([
-            'post_id' => $request->input('post_id'),
-            'user_id' => $request->input('user_id'),
-        ]);
-
-        session()->flash('success', 'You Liked the Post');
-        return ;
+        Like::create($request->all());
     }
 
     public function unlike(Request $request)
@@ -102,7 +76,6 @@ class PostsController extends Controller
         $userId = $request->input('user_id');
         $like = Like::where('post_id', $postId)->where('user_id', $userId)->first();
         $like->delete();
-        return ;
     }
 
     public function isLiked(Request $request)
@@ -111,11 +84,7 @@ class PostsController extends Controller
         $postId = $request->input('post_id');
         $like = Like::where('user_id', $userId)->where('post_id', $postId)->first();
         $count = Like::where('post_id', $postId)->count();
-        if ($like) {
-            return response()->json(['bool' => True, 'count'=>$count]);
-        } else {
-            return response()->json(['bool' => False, 'count'=>$count]);
-        }
+        return response()->json(['bool' => isSet($like), 'count'=>$count]);
     }
 
     public function likesCount($id)

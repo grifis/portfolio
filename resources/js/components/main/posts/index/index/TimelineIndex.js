@@ -1,18 +1,20 @@
 import React, {useEffect, useState} from 'react';
 import { Link as RouterLink } from "react-router-dom";
+
+import {Drawer, Grid, InputBase, InputLabel, MenuItem, Toolbar} from '@material-ui/core';
 import Button from '@material-ui/core/Button';
 import Card from '@material-ui/core/Card';
 import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
-import {Drawer, Grid, InputBase, InputLabel, MenuItem, Toolbar} from '@material-ui/core';
 import { makeStyles, alpha} from '@material-ui/core/styles';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
+import Link from '@material-ui/core/Link';
 import SearchIcon from '@material-ui/icons/Search';
+
 import InfiniteScroll  from "react-infinite-scroller";
 import axios from "axios";
-import Link from '@material-ui/core/Link';
 
 import Test from '../../../../Test';
 
@@ -27,7 +29,7 @@ function TimeLineIndex(props) {
 
 
     useEffect(() => {
-        getMoviesFirst(1)
+        getMovies(1)
         getRank()
         return () => {
             reset()
@@ -39,60 +41,33 @@ function TimeLineIndex(props) {
         const response = await axios.get(`/api/movie?page=${page}`, {params: queries})
         if (response.data.movie.data.length < 1) {
             props.setHasMore(false);
-            console.log('no posts')
         }
         console.log(response.data.movie.data);
-        console.log(response.data)
         setMovies([...movies, ...response.data.movie.data])
-    }
-
-    const getMoviesFirst = async(page) => {
-        const queries = {tag_id: tag, word: word};
-        const response = await axios.get(`/api/movie?page=${page}`, {params: queries})
-        if (response.data.movie.data.length < 1) {
-            props.setHasMore(false);
-            console.log('no posts')
-        }
-        console.log(response.data.movie.data);
-        console.log(response.data)
-        setMovies([...response.data.movie.data])
     }
 
     const getRank = async() => {
         const queries = {tag_id: tag, word: word};
         const response = await axios.get(`/api/rank`, {params: queries})
-
-        console.log(response.data.rank);
         setRanks([...response.data.rank])
     }
 
     const reset = () => {
         props.setHasMore(true);
-        console.log('リセットされたよ');
     }
 
     const tagChange = (event) => {
+        setMovies([]);
         setTag(event.target.value);
-        console.log(event.target.value);
     };
 
     const wordChange = (event) => {
-        if (event.target.value) {
-            window.document.onkeydown = function(event){
-                if (event.key === 'Enter') {
-                    setWord(event.target.value);
-                    console.log(event.target.value);
-                    event.target.value = "";
-                }
+        console.log(event.nativeEvent.isComposing);
+            if (event.key === 'Enter' &&　!event.nativeEvent.isComposing) {
+                setMovies([]);
+                setWord(event.target.value);
+                event.target.value = "";
             }
-        } else {
-                window.document.onkeydown = function(event){
-                    if (event.key === 'Enter') {
-                        setWord(null);
-                        console.log('nothing');
-                    }
-                }
-        }
     }
 
     const useStyles = makeStyles((theme) => ({
@@ -176,12 +151,13 @@ function TimeLineIndex(props) {
     //各スクロール要素
     const items = (
         <div>
-            {movies.map((movie) =>
+            {movies.map(function(movie) {
+                return(
                 <Card variant="outlined" key={movie.id} className={classes.menuButton}>
                     <CardContent>
                         <Typography color="textSecondary">
                             ユーザー名:
-                            <Link color="textSecondary" component={RouterLink} to={`/profile/${movie.user.id}`} >
+                            <Link color="textSecondary" component={RouterLink} to={`/profile/${movie.user.id}`}>
                                 {movie.user.name}
                             </Link>
                         </Typography>
@@ -191,12 +167,13 @@ function TimeLineIndex(props) {
                             <video src={`${movie.video_path}`} controls width="75%"/>
                         </CardActions>
                         <CardActions>
-                            <Button variant="contained" color="primary" component={RouterLink} to={`/timeline/${movie.id}`}>詳細</Button>
+                            <Button variant="contained" color="primary" component={RouterLink}
+                                    to={`/timeline/${movie.id}`}>詳細</Button>
                             <Test user={props.user} movie={movie}/>
                         </CardActions>
                     </CardContent>
-                </Card>
-            )}
+                </Card>)
+            })}
         </div>);
 
 
@@ -249,7 +226,7 @@ function TimeLineIndex(props) {
                                     }}
                                     inputProps={{ 'aria-label': 'search' }}
                                     type="text"
-                                    onChange={wordChange}
+                                    onKeyDown={wordChange}
                                 />
                             </div>
                             <div>

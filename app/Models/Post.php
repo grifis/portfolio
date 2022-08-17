@@ -4,22 +4,35 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Storage;
 
 class Post extends Model
 {
     use HasFactory;
 
     protected $fillable = [
-        'name',
-        'email',
-        'password',
+        'user_id',
+        'question_id',
         'tag_id',
-        'text',
+        'body',
+        'video_path',
     ];
+
+    public function upload($request)
+    {
+        $input_post = $request->all();
+
+        $video = $request->file('video');
+        $path = Storage::disk('s3')->putFile('image', $video, 'public');
+
+        $this->video_path = Storage::disk('s3')->url($path);
+        $this->body = 'sample';
+        $this->fill($input_post)->save();
+    }
 
     public function getMovie($request)
     {
-        $query = Post::with('question', 'user', 'tag' ,'likes')->latest();  //それぞれのテーブルとリレーションを繋ぎ、降順に並べ替え
+        $query = Post::withCount('likes')->with('question', 'user', 'tag' ,'likes')->latest();  //それぞれのテーブルとリレーションを繋ぎ、降順に並べ替え
         $user_id = $request->input("id");
         $tag_id = $request->input('tag_id');
         $word = $request->input('word');
@@ -28,10 +41,8 @@ class Post extends Model
             $query->where('user_id', $user_id);
         }
 
-        if ($tag_id) {  //業界が選択されたら、その業界で絞る
-            $query->whereHas('tag', function($q) use($tag_id){
-                $q->where('id', $tag_id);
-            });
+        if($tag_id) {  //業界が選択されたら、その業界で絞る
+            $query->where('tag_id', $tag_id);
         }
 
         if ($word) {  //キーワードが入力されたら、それを含むものに絞る
